@@ -26,15 +26,16 @@ public class Starter {
     }
 
     public void init() {
-        String userInput = this.input.getInputString("Welcome to Currency Rate Predictor\n" +
+        this.output.print("Welcome to Currency Rate Predictor\n" +
                 "Usage: rate <USD | EUR | TRY> <tomorrow | week>\n" +
                 "Enter command:\n");
+        String userInput = this.input.getInputString();
         UserInputController.proceed(userInput, this.parser, this.predictor).forEach(output::print);
     }
 
     public static void main(String[] args) {
         Output output = new ConsoleOutput();
-        new Starter(new ValidateInput(new ConsoleInput(output)),
+        new Starter(new ValidateInput(new ConsoleInput(), output),
                     output,
                     new CSVParser(),
                     new ArithmeticMean()).init();

@@ -1,6 +1,9 @@
 package ru.liga.input;
 
-import ru.liga.currencies.CurrencyTypes;
+import ru.liga.exceptions.InvalidArgumentException;
+import ru.liga.exceptions.InvalidCurrencyException;
+import ru.liga.exceptions.InvalidRangeException;
+import ru.liga.output.Output;
 
 /**
  * Input wrapper, which provides input validation
@@ -9,31 +12,28 @@ import ru.liga.currencies.CurrencyTypes;
 public class ValidateInput implements Input {
 
     private final Input input;
+    private final Output output;
 
-    public ValidateInput(Input input) {
+    public ValidateInput(Input input, Output output) {
         this.input = input;
+        this.output = output;
     }
 
     /**
      * Validates input
-     * @param message message to display when asking for input
      * @return input string
      */
 
     @Override
-    public String getInputString(String message) {
-        String userInput = this.input.getInputString(message);
+    public String getInputString() {
         boolean isValidInput = false;
+        String userInput = "";
         while (!isValidInput) {
-            String[] words = userInput.split(" ");
-            if (words.length == 3
-                    && words[0].equals("rate")
-                    && CurrencyTypes.getValidCurrencies().contains(words[1])
-                    &&
-                    (words[2].equals("tomorrow") || words[2].equals("week"))) {
+            try {
+                userInput = input.getInputString();
                 isValidInput = true;
-            } else {
-                userInput = this.input.getInputString("Enter correct command!");
+            } catch (InvalidArgumentException | InvalidRangeException | InvalidCurrencyException e) {
+                this.output.print(e.getMessage());
             }
         }
         return userInput;
