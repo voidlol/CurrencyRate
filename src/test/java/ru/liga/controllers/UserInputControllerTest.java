@@ -102,44 +102,44 @@ public class UserInputControllerTest {
 
     @Test
     public void whenInputIsWeekUSDThenResultHas7String() {
-        List<String> rate_usd_tomorrow = UserInputController.proceed("rate USD week", new StubParser(), new ArithmeticMean());
+        List<String> rate_usd_week = UserInputController.proceed("rate USD week", new StubParser(), new ArithmeticMean());
 
-        assertEquals(7, rate_usd_tomorrow.size());
-        assertEquals(TOMORROW + " - 8,00", rate_usd_tomorrow.get(0));
-        assertEquals(THE_DAY_AFTER_TOMORROW + " - 8,43", rate_usd_tomorrow.get(1));
-        assertEquals(THIRD_DAY + " - 8,78", rate_usd_tomorrow.get(2));
-        assertEquals(FOURTH_DAY + " - 9,03", rate_usd_tomorrow.get(3));
-        assertEquals(FIFTH_DAY + " - 9,18", rate_usd_tomorrow.get(4));
-        assertEquals(SIXTH_DAY + " - 9,20", rate_usd_tomorrow.get(5));
-        assertEquals(SEVENTH_DAY + " - 9,09", rate_usd_tomorrow.get(6));
+        assertEquals(7, rate_usd_week.size());
+        assertEquals(TOMORROW + " - 8,00", rate_usd_week.get(0));
+        assertEquals(THE_DAY_AFTER_TOMORROW + " - 8,43", rate_usd_week.get(1));
+        assertEquals(THIRD_DAY + " - 8,78", rate_usd_week.get(2));
+        assertEquals(FOURTH_DAY + " - 9,03", rate_usd_week.get(3));
+        assertEquals(FIFTH_DAY + " - 9,18", rate_usd_week.get(4));
+        assertEquals(SIXTH_DAY + " - 9,20", rate_usd_week.get(5));
+        assertEquals(SEVENTH_DAY + " - 9,09", rate_usd_week.get(6));
     }
 
     @Test
     public void whenInputIsWeekEURThenResultHas7String() {
-        List<String> rate_eur_tomorrow = UserInputController.proceed("rate EUR week", new StubParser(), new ArithmeticMean());
+        List<String> rate_eur_week = UserInputController.proceed("rate EUR week", new StubParser(), new ArithmeticMean());
 
-        assertEquals(7, rate_eur_tomorrow.size());
-        assertEquals(TOMORROW + " - 4,00", rate_eur_tomorrow.get(0));
-        assertEquals(THE_DAY_AFTER_TOMORROW + " - 4,43", rate_eur_tomorrow.get(1));
-        assertEquals(THIRD_DAY + " - 4,78", rate_eur_tomorrow.get(2));
-        assertEquals(FOURTH_DAY + " - 5,03", rate_eur_tomorrow.get(3));
-        assertEquals(FIFTH_DAY + " - 5,18", rate_eur_tomorrow.get(4));
-        assertEquals(SIXTH_DAY + " - 5,20", rate_eur_tomorrow.get(5));
-        assertEquals(SEVENTH_DAY + " - 5,09", rate_eur_tomorrow.get(6));
+        assertEquals(7, rate_eur_week.size());
+        assertEquals(TOMORROW + " - 4,00", rate_eur_week.get(0));
+        assertEquals(THE_DAY_AFTER_TOMORROW + " - 4,43", rate_eur_week.get(1));
+        assertEquals(THIRD_DAY + " - 4,78", rate_eur_week.get(2));
+        assertEquals(FOURTH_DAY + " - 5,03", rate_eur_week.get(3));
+        assertEquals(FIFTH_DAY + " - 5,18", rate_eur_week.get(4));
+        assertEquals(SIXTH_DAY + " - 5,20", rate_eur_week.get(5));
+        assertEquals(SEVENTH_DAY + " - 5,09", rate_eur_week.get(6));
     }
 
     @Test
     public void whenInputIsWeekTRYThenResultHas7String() {
-        List<String> rate_try_tomorrow = UserInputController.proceed("rate TRY week", new StubParser(), new ArithmeticMean());
+        List<String> rate_try_week = UserInputController.proceed("rate TRY week", new StubParser(), new ArithmeticMean());
 
-        assertEquals(7, rate_try_tomorrow.size());
-        assertEquals(TOMORROW + " - 16,60", rate_try_tomorrow.get(0));
-        assertEquals(THE_DAY_AFTER_TOMORROW + " - 18,26", rate_try_tomorrow.get(1));
-        assertEquals(THIRD_DAY + " - 19,87", rate_try_tomorrow.get(2));
-        assertEquals(FOURTH_DAY + " - 21,56", rate_try_tomorrow.get(3));
-        assertEquals(FIFTH_DAY + " - 22,78", rate_try_tomorrow.get(4));
-        assertEquals(SIXTH_DAY + " - 18,18", rate_try_tomorrow.get(5));
-        assertEquals(SEVENTH_DAY + " - 18,04", rate_try_tomorrow.get(6));
+        assertEquals(7, rate_try_week.size());
+        assertEquals(TOMORROW + " - 16,60", rate_try_week.get(0));
+        assertEquals(THE_DAY_AFTER_TOMORROW + " - 18,26", rate_try_week.get(1));
+        assertEquals(THIRD_DAY + " - 19,87", rate_try_week.get(2));
+        assertEquals(FOURTH_DAY + " - 21,56", rate_try_week.get(3));
+        assertEquals(FIFTH_DAY + " - 22,78", rate_try_week.get(4));
+        assertEquals(SIXTH_DAY + " - 18,18", rate_try_week.get(5));
+        assertEquals(SEVENTH_DAY + " - 18,04", rate_try_week.get(6));
     }
 
 
