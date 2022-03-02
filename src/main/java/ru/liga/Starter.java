@@ -1,10 +1,10 @@
 package ru.liga;
 
-import ru.liga.controllers.UserInputController;
 import ru.liga.data.CSVParser;
 import ru.liga.data.CurrencyParser;
 import ru.liga.input.ConsoleInput;
 import ru.liga.input.Input;
+import ru.liga.input.UserCommand;
 import ru.liga.input.ValidateInput;
 import ru.liga.output.ConsoleOutput;
 import ru.liga.output.Output;
@@ -29,8 +29,8 @@ public class Starter {
         this.output.print("Welcome to Currency Rate Predictor\n" +
                 "Usage: rate <USD | EUR | TRY> <tomorrow | week>\n" +
                 "Enter command:\n");
-        String userInput = this.input.getInputString();
-        UserInputController.proceed(userInput, this.parser, this.predictor).forEach(output::print);
+        UserCommand userInput = this.input.getUserCommand();
+        userInput.proceed(this.parser, this.predictor).forEach(currencyRate -> this.output.print(currencyRate.toString()));
     }
 
     public static void main(String[] args) {

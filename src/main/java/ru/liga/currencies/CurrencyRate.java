@@ -4,12 +4,13 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.Locale;
+import java.util.Objects;
 
 public class CurrencyRate {
 
-    private LocalDate date;
-    private CurrencyTypes type;
-    private Double rate;
+    private final LocalDate date;
+    private final CurrencyTypes type;
+    private final Double rate;
 
     public CurrencyRate(LocalDate date, CurrencyTypes type, Double rate) {
         this.date = date;
@@ -29,10 +30,26 @@ public class CurrencyRate {
         return rate;
     }
 
+    private Double getRoundedRate() {
+        return Math.round(rate * 100) / 100d;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CurrencyRate that = (CurrencyRate) o;
+        return Objects.equals(getDate(), that.getDate()) && getType() == that.getType() && Objects.equals(getRoundedRate(), that.getRoundedRate());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getDate(), getType(), getRate());
+    }
+
     @Override
     public String toString() {
         String dayName = date.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.forLanguageTag("ru"));
-        Double roundedRate = Math.round(rate * 100) / 100d;
-        return String.format("%s %s - %.2f", dayName, date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")), roundedRate);
+        return String.format("%s %s - %.2f", dayName, date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")), getRoundedRate());
     }
 }

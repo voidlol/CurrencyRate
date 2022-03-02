@@ -2,15 +2,18 @@ package ru.liga.data;
 
 import ru.liga.currencies.CurrencyRate;
 import ru.liga.currencies.CurrencyTypes;
+
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
- * Reads CSV file using scanner;
+ * Reads CSV file using BufferedReader;
  */
-
 public class CSVParser implements CurrencyParser {
 
     private final Map<String, CurrencyTypes> localizedCurrencyNames = new HashMap<>();
@@ -22,15 +25,20 @@ public class CSVParser implements CurrencyParser {
         localizedCurrencyNames.put("Доллар США", CurrencyTypes.USD);
     }
 
+    /**
+     * Reads CSV file to get Currency Rates
+     * @param type type of currency to read
+     * @param dataLength - list size
+     * @return List of CurrencyRate
+     */
     @Override
-    public List<CurrencyRate> getCurrencyRates(CurrencyTypes type) {
+    public List<CurrencyRate> getCurrencyRates(CurrencyTypes type, int dataLength) {
         List<CurrencyRate> rates = new ArrayList<>();
-        InputStream is = this.getClass().getResourceAsStream("/" + type + FILENAME_SUFFIX);
-        try (Scanner scanner = new Scanner(is)) {
-            scanner.nextLine();
-            while (scanner.hasNext()) {
-                rates.add(parseCurrencyRate(scanner.nextLine()));
-            }
+        try (InputStream is = this.getClass().getResourceAsStream("/" + type + FILENAME_SUFFIX);
+             BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+            br.lines().skip(1).limit(dataLength).forEach(l -> rates.add(parseCurrencyRate(l)));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         return rates;
@@ -41,7 +49,6 @@ public class CSVParser implements CurrencyParser {
      * @param line string to parse
      * @return new CurrencyRate object
      */
-
     private CurrencyRate parseCurrencyRate(String line) {
         Scanner scanner = new Scanner(line);
         scanner.useDelimiter(";");

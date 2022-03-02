@@ -25,17 +25,13 @@ public class ValidateInput implements Input {
      */
 
     @Override
-    public String getInputString() {
-        boolean isValidInput = false;
-        String userInput = "";
-        while (!isValidInput) {
+    public UserCommand getUserCommand() {
+        while (true) {
             try {
-                userInput = input.getInputString();
-                isValidInput = true;
+                return input.getUserCommand();
             } catch (InvalidArgumentException | InvalidRangeException | InvalidCurrencyException e) {
                 this.output.print(e.getMessage());
             }
         }
-        return userInput;
     }
 }

@@ -12,5 +12,6 @@ public interface CurrencyPredictor {
      * @param days range for prediction
      * @return List of strings with predicted rates
      */
-    List<String> predict(List<CurrencyRate> data, int days);
+    List<CurrencyRate> predict(List<CurrencyRate> data, int days);
+    int getRequiredDataSize();
 }
