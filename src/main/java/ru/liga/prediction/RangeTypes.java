@@ -1,6 +1,9 @@
 package ru.liga.prediction;
 
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 public enum RangeTypes {
     TOMORROW(1), WEEK(7);
 
@@ -21,6 +24,10 @@ public enum RangeTypes {
 
     public int getDays() {
         return days;
+    }
+
+    public static String getString() {
+        return Arrays.stream(values()).map(c -> c.name().toLowerCase()).collect(Collectors.joining(" | ", "<", ">"));
     }
 
 }

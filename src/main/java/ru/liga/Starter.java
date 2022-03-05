@@ -30,7 +30,7 @@ public class Starter {
                 "Usage: rate <USD | EUR | TRY> <tomorrow | week>\n" +
                 "Enter command:\n");
         UserCommand userInput = this.input.getUserCommand();
-        userInput.proceed(this.parser, this.predictor).forEach(currencyRate -> this.output.print(currencyRate.toString()));
+        userInput.execute(this.parser, this.predictor).forEach(currencyRate -> this.output.print(currencyRate.toString()));
     }
 
     public static void main(String[] args) {

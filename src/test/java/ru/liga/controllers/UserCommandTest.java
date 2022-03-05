@@ -70,7 +70,7 @@ public class UserCommandTest {
 
     @Test
     public void whenInputIsTomorrowUSDThenResultHas1String() {
-        List<CurrencyRate> rate_usd_tomorrow = new UserCommand("rate USD tomorrow").proceed(currencyParser, new ArithmeticMean());
+        List<CurrencyRate> rate_usd_tomorrow = new UserCommand("rate USD tomorrow").execute(currencyParser, new ArithmeticMean());
         CurrencyRate tomorrowRate = new CurrencyRate(TOMORROW, CurrencyTypes.USD, 8d);
 
         assertThat(rate_usd_tomorrow.size()).isEqualTo(1);
@@ -79,7 +79,7 @@ public class UserCommandTest {
 
     @Test
     public void whenInputIsTomorrowEURThenResultHas1String() {
-        List<CurrencyRate> rate_eur_tomorrow = new UserCommand("rate EUR tomorrow").proceed(currencyParser, new ArithmeticMean());
+        List<CurrencyRate> rate_eur_tomorrow = new UserCommand("rate EUR tomorrow").execute(currencyParser, new ArithmeticMean());
         CurrencyRate tomorrowRate = new CurrencyRate(TOMORROW, CurrencyTypes.EUR, 4d);
 
         assertThat(rate_eur_tomorrow.size()).isEqualTo(1);
@@ -88,7 +88,7 @@ public class UserCommandTest {
 
     @Test
     public void whenInputIsTomorrowTRYThenResultHas1String() {
-        List<CurrencyRate> rate_try_tomorrow = new UserCommand("rate TRY tomorrow").proceed(currencyParser, new ArithmeticMean());
+        List<CurrencyRate> rate_try_tomorrow = new UserCommand("rate TRY tomorrow").execute(currencyParser, new ArithmeticMean());
         CurrencyRate tomorrowRate = new CurrencyRate(TOMORROW, CurrencyTypes.TRY, 16.6d);
 
         assertThat(rate_try_tomorrow.size()).isEqualTo(1);
@@ -97,7 +97,7 @@ public class UserCommandTest {
 
     @Test
     public void whenInputIsWeekUSDThenResultHas7String() {
-        List<CurrencyRate> rate_usd_week = new UserCommand("rate USD week").proceed(currencyParser, new ArithmeticMean());
+        List<CurrencyRate> rate_usd_week = new UserCommand("rate USD week").execute(currencyParser, new ArithmeticMean());
         CurrencyRate tomorrowRate = new CurrencyRate(TOMORROW, CurrencyTypes.USD, 8d);
         CurrencyRate secondDayRate = new CurrencyRate(THE_DAY_AFTER_TOMORROW, CurrencyTypes.USD, 8.43);
         CurrencyRate thirdDayRate = new CurrencyRate(THIRD_DAY, CurrencyTypes.USD, 8.78);
@@ -118,7 +118,7 @@ public class UserCommandTest {
 
     @Test
     public void whenInputIsWeekEURThenResultHas7String() {
-        List<CurrencyRate> rate_eur_week = new UserCommand("rate EUR week").proceed(currencyParser, new ArithmeticMean());
+        List<CurrencyRate> rate_eur_week = new UserCommand("rate EUR week").execute(currencyParser, new ArithmeticMean());
         CurrencyRate tomorrowRate = new CurrencyRate(TOMORROW, CurrencyTypes.EUR, 4d);
         CurrencyRate secondDayRate = new CurrencyRate(THE_DAY_AFTER_TOMORROW, CurrencyTypes.EUR, 4.43);
         CurrencyRate thirdDayRate = new CurrencyRate(THIRD_DAY, CurrencyTypes.EUR, 4.78);
@@ -139,7 +139,7 @@ public class UserCommandTest {
 
     @Test
     public void whenInputIsWeekTRYThenResultHas7String() {
-        List<CurrencyRate> rate_try_week = new UserCommand("rate TRY week").proceed(currencyParser, new ArithmeticMean());
+        List<CurrencyRate> rate_try_week = new UserCommand("rate TRY week").execute(currencyParser, new ArithmeticMean());
         CurrencyRate tomorrowRate = new CurrencyRate(TOMORROW, CurrencyTypes.TRY, 16.6d);
         CurrencyRate secondDayRate = new CurrencyRate(THE_DAY_AFTER_TOMORROW, CurrencyTypes.TRY, 18.26);
         CurrencyRate thirdDayRate = new CurrencyRate(THIRD_DAY, CurrencyTypes.TRY, 19.87);

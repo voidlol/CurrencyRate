@@ -25,16 +25,23 @@ public class UserCommand {
     public UserCommand(String userInput) {
         String[] words = userInput.split(" ");
         command = words[COMMAND_INDEX];
+        if (command.equalsIgnoreCase("Exit")) {
+            System.exit(0);
+        }
+        if (!(words.length == COMMAND_LENGTH && command.equals("rate"))) {
+            String validCommand = "rate " + CurrencyTypes.getString() + " " + RangeTypes.getString();
+            throw new InvalidArgumentException("Enter correct command: " + validCommand);
+        }
         currencyType = CurrencyTypes.findByName(words[CURRENCY_INDEX]);
         rangeType = RangeTypes.findByName(words[RANGE_INDEX]);
-        if (!(words.length == COMMAND_LENGTH && command.equals("rate"))) {
-            throw new InvalidArgumentException("Enter correct command: rate <USD | EUR | TRY> <tomorrow | week>");
-        }
+
         if (currencyType == null) {
-            throw new InvalidCurrencyException("Enter correct currency type: USD | EUR | TRY");
+            String validCurrencies = CurrencyTypes.getString();
+            throw new InvalidCurrencyException("Enter correct currency type: " + validCurrencies);
         }
         if (rangeType == null) {
-            throw new InvalidRangeException("Enter correct range: tomorrow | week");
+            String validRange = RangeTypes.getString();
+            throw new InvalidRangeException("Enter correct range: " + validRange);
         }
     }
 
@@ -51,7 +58,7 @@ public class UserCommand {
         return rangeType;
     }
 
-    public List<CurrencyRate> proceed(CurrencyParser parser, CurrencyPredictor predictor) {
+    public List<CurrencyRate> execute(CurrencyParser parser, CurrencyPredictor predictor) {
         CurrencyTypes type = this.getCurrencyType();
         List<CurrencyRate> currencyRates = parser.getCurrencyRates(type, predictor.getRequiredDataSize());
         return predictor.predict(currencyRates, this.getRangeType().getDays());
