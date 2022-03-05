@@ -1,5 +1,6 @@
 package ru.liga;
 
+import ru.liga.currencies.CurrencyTypes;
 import ru.liga.data.CSVParser;
 import ru.liga.data.CurrencyParser;
 import ru.liga.input.ConsoleInput;
@@ -10,6 +11,7 @@ import ru.liga.output.ConsoleOutput;
 import ru.liga.output.Output;
 import ru.liga.prediction.ArithmeticMean;
 import ru.liga.prediction.CurrencyPredictor;
+import ru.liga.prediction.RangeTypes;
 
 public class Starter {
 
@@ -27,7 +29,7 @@ public class Starter {
 
     public void init() {
         this.output.print("Welcome to Currency Rate Predictor\n" +
-                "Usage: rate <USD | EUR | TRY> <tomorrow | week>\n" +
+                "Usage: rate " + CurrencyTypes.getString() + " " + RangeTypes.getString() + "\n" +
                 "Enter command:\n");
         UserCommand userInput = this.input.getUserCommand();
         userInput.execute(this.parser, this.predictor).forEach(currencyRate -> this.output.print(currencyRate.toString()));

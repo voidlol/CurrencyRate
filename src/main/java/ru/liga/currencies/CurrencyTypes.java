@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public enum CurrencyTypes {
-    USD, EUR, TRY;
+    USD, EUR, TRY, AMD, BGN;
 
     public static CurrencyTypes findByName(String name) {
         for (CurrencyTypes currencyTypes : values()) {

@@ -17,7 +17,7 @@ import java.util.*;
 public class CSVParser implements CurrencyParser {
 
     private final Map<String, CurrencyTypes> localizedCurrencyNames = new HashMap<>();
-    private static final String FILENAME_SUFFIX = "_F01_02_2002_T01_02_2022.csv";
+    private static final String FILENAME_SUFFIX = "_F01_02_2005_T05_03_2022.csv";
 
     public CSVParser() {
         localizedCurrencyNames.put("Евро", CurrencyTypes.EUR);
@@ -52,8 +52,9 @@ public class CSVParser implements CurrencyParser {
     private CurrencyRate parseCurrencyRate(String line) {
         Scanner scanner = new Scanner(line);
         scanner.useDelimiter(";");
+        scanner.next();
         LocalDate date = LocalDate.parse(scanner.next(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-        Double rate = scanner.nextDouble();
+        Double rate = Double.parseDouble(scanner.next().replace("\"", "").replace(",", "."));
         CurrencyTypes type = localizedCurrencyNames.get(scanner.next());
         return new CurrencyRate(date, type, rate);
     }
