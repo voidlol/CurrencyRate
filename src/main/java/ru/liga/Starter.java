@@ -9,8 +9,6 @@ import ru.liga.input.UserCommand;
 import ru.liga.input.ValidateInput;
 import ru.liga.output.ConsoleOutput;
 import ru.liga.output.Output;
-import ru.liga.prediction.ArithmeticMean;
-import ru.liga.prediction.CurrencyPredictor;
 import ru.liga.prediction.RangeTypes;
 
 public class Starter {
@@ -18,13 +16,11 @@ public class Starter {
     private final Input input;
     private final Output output;
     private final CurrencyParser parser;
-    private final CurrencyPredictor predictor;
 
-    public Starter(Input input, Output output, CurrencyParser parser, CurrencyPredictor predictor) {
+    public Starter(Input input, Output output, CurrencyParser parser) {
         this.input = input;
         this.output = output;
         this.parser = parser;
-        this.predictor = predictor;
     }
 
     public void init() {
@@ -32,14 +28,13 @@ public class Starter {
                 "Usage: rate " + CurrencyTypes.getString() + " " + RangeTypes.getString() + "\n" +
                 "Enter command:\n");
         UserCommand userInput = this.input.getUserCommand();
-        userInput.execute(this.parser, this.predictor).forEach(currencyRate -> this.output.print(currencyRate.toString()));
+        userInput.execute(this.parser).forEach(currencyRate -> this.output.print(currencyRate.toString()));
     }
 
     public static void main(String[] args) {
         Output output = new ConsoleOutput();
         new Starter(new ValidateInput(new ConsoleInput(), output),
                     output,
-                    new CSVParser(),
-                    new ArithmeticMean()).init();
+                    new CSVParser()).init();
     }
 }

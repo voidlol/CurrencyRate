@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public enum RangeTypes {
-    TOMORROW(1), WEEK(7);
+    WEEK(7), MONTH(30);
 
     private final int days;
 
