@@ -10,7 +10,7 @@ public class App {
     public static void main(String[] args) {
         try {
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
-            Bot bot = new Bot("currencyrate_bot", "5156488335:AAEEaAVzyyR4HXOEYsjjPHvlNtY6Qv4te9I");
+            Bot bot = new Bot("currencyrate_bot", "TOKEN");
             botsApi.registerBot(bot);
         } catch (TelegramApiException e) {
             e.printStackTrace();
