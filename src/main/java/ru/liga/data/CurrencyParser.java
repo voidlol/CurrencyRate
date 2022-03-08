@@ -11,5 +11,5 @@ public interface CurrencyParser {
      * @param type type of currency to read
      * @return list of currency rates read from source
      */
-    List<CurrencyRate> getCurrencyRates(CurrencyTypes type, int dataLength);
+    List<CurrencyRate> getCurrencyRates(CurrencyTypes type);
 }
