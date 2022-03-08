@@ -2,8 +2,10 @@ package ru.liga.prediction;
 
 import ru.liga.currencies.CurrencyRate;
 import ru.liga.currencies.CurrencyTypes;
+import ru.liga.repository.CurrencyRepository;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,8 +14,12 @@ import java.util.stream.Collectors;
 
 public class LinearAlgorithm implements CurrencyPredictor {
 
+    private static final int DATE_AMOUNT_TO_INTERPOLATE = 30;
+
     @Override
-    public List<CurrencyRate> predict(List<CurrencyRate> data, LocalDate targetDate, boolean isRange) {
+    public List<CurrencyRate> predict(CurrencyRepository repository, CurrencyTypes type, LocalDate targetDate, boolean isRange) {
+        List<CurrencyRate> data = repository.getRates(type, DATE_AMOUNT_TO_INTERPOLATE);
+        LocalDate nextDay = data.get(0).getDate().plusDays(1);
         data.sort(Comparator.comparing(CurrencyRate::getDate));
         double[] dates = new double[data.size()];
         double[] rates = new double[data.size()];
@@ -23,12 +29,15 @@ public class LinearAlgorithm implements CurrencyPredictor {
         }
         LinearRegression linearRegression = new LinearRegression(dates, rates);
         List<CurrencyRate> result = new ArrayList<>();
-        CurrencyTypes currencyTypes = data.get(0).getType();
+        CurrencyTypes currencyType = data.get(0).getType();
         int i = 1;
         do {
-            result.add(new CurrencyRate(LocalDate.now().plusDays(i), currencyTypes, linearRegression.predict(dates[data.size() - 1] + i)));
+            if (nextDay.isAfter(LocalDate.now())) {
+                result.add(new CurrencyRate(nextDay, currencyType, linearRegression.predict(dates[data.size() - 1] + i)));
+            }
+            nextDay = nextDay.plusDays(1);
             i++;
-        } while (!result.get(result.size() - 1).getDate().isEqual(targetDate));
+        } while (!nextDay.isAfter(targetDate));
 
         if (isRange) {
             return result;
@@ -36,10 +45,5 @@ public class LinearAlgorithm implements CurrencyPredictor {
             Collections.reverse(result);
             return result.stream().limit(1).collect(Collectors.toList());
         }
-    }
-
-    @Override
-    public int getRequiredDataSize() {
-        return 30;
     }
 }
