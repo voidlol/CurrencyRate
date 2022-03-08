@@ -4,9 +4,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import ru.liga.currencies.CurrencyRate;
 import ru.liga.currencies.CurrencyTypes;
-import ru.liga.data.CurrencyParser;
 import ru.liga.input.UserCommand;
-import ru.liga.prediction.ArithmeticMean;
+import ru.liga.input.UserCommandParser;
+import ru.liga.repository.CurrencyRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -29,48 +29,50 @@ public class UserCommandTest {
     private static final LocalDate FIFTH_DAY = LocalDate.now().plusDays(5);
     private static final LocalDate SIXTH_DAY = LocalDate.now().plusDays(6);
     private static final LocalDate SEVENTH_DAY = LocalDate.now().plusDays(7);
-    private static final CurrencyParser currencyParser = mock(CurrencyParser.class);
+    private static final CurrencyRepository currencyRepository = mock(CurrencyRepository.class);
 
    static {
         //TRY sample 16,6avg
-        dataTRY.add(new CurrencyRate(LocalDate.now().minusDays(6), CurrencyTypes.TRY, 5d));
-        dataTRY.add(new CurrencyRate(LocalDate.now().minusDays(5), CurrencyTypes.TRY, 7d));
-        dataTRY.add(new CurrencyRate(LocalDate.now().minusDays(4), CurrencyTypes.TRY, 8d));
-        dataTRY.add(new CurrencyRate(LocalDate.now().minusDays(3), CurrencyTypes.TRY, 13d));
-        dataTRY.add(new CurrencyRate(LocalDate.now().minusDays(2), CurrencyTypes.TRY, 55d));
-        dataTRY.add(new CurrencyRate(LocalDate.now().minusDays(1), CurrencyTypes.TRY, 19.2));
         dataTRY.add(new CurrencyRate(LocalDate.now(), CurrencyTypes.TRY, 9d));
+        dataTRY.add(new CurrencyRate(LocalDate.now().minusDays(1), CurrencyTypes.TRY, 19.2));
+        dataTRY.add(new CurrencyRate(LocalDate.now().minusDays(2), CurrencyTypes.TRY, 55d));
+        dataTRY.add(new CurrencyRate(LocalDate.now().minusDays(3), CurrencyTypes.TRY, 13d));
+        dataTRY.add(new CurrencyRate(LocalDate.now().minusDays(4), CurrencyTypes.TRY, 8d));
+        dataTRY.add(new CurrencyRate(LocalDate.now().minusDays(5), CurrencyTypes.TRY, 7d));
+        dataTRY.add(new CurrencyRate(LocalDate.now().minusDays(6), CurrencyTypes.TRY, 5d));
 
         //USD sample 8avg
-        dataUSD.add(new CurrencyRate(LocalDate.now().minusDays(6), CurrencyTypes.USD, 5d));
-        dataUSD.add(new CurrencyRate(LocalDate.now().minusDays(5), CurrencyTypes.USD, 6d));
-        dataUSD.add(new CurrencyRate(LocalDate.now().minusDays(4), CurrencyTypes.USD, 7d));
-        dataUSD.add(new CurrencyRate(LocalDate.now().minusDays(3), CurrencyTypes.USD, 8d));
-        dataUSD.add(new CurrencyRate(LocalDate.now().minusDays(2), CurrencyTypes.USD, 9d));
-        dataUSD.add(new CurrencyRate(LocalDate.now().minusDays(1), CurrencyTypes.USD, 10d));
         dataUSD.add(new CurrencyRate(LocalDate.now(), CurrencyTypes.USD, 11d));
+        dataUSD.add(new CurrencyRate(LocalDate.now().minusDays(1), CurrencyTypes.USD, 10d));
+        dataUSD.add(new CurrencyRate(LocalDate.now().minusDays(2), CurrencyTypes.USD, 9d));
+        dataUSD.add(new CurrencyRate(LocalDate.now().minusDays(3), CurrencyTypes.USD, 8d));
+        dataUSD.add(new CurrencyRate(LocalDate.now().minusDays(4), CurrencyTypes.USD, 7d));
+        dataUSD.add(new CurrencyRate(LocalDate.now().minusDays(5), CurrencyTypes.USD, 6d));
+        dataUSD.add(new CurrencyRate(LocalDate.now().minusDays(6), CurrencyTypes.USD, 5d));
 
         //EUR sample 4avg
-        dataEUR.add(new CurrencyRate(LocalDate.now().minusDays(6), CurrencyTypes.EUR, 1d));
-        dataEUR.add(new CurrencyRate(LocalDate.now().minusDays(5), CurrencyTypes.EUR, 2d));
-        dataEUR.add(new CurrencyRate(LocalDate.now().minusDays(4), CurrencyTypes.EUR, 3d));
-        dataEUR.add(new CurrencyRate(LocalDate.now().minusDays(3), CurrencyTypes.EUR, 4d));
-        dataEUR.add(new CurrencyRate(LocalDate.now().minusDays(2), CurrencyTypes.EUR, 5d));
-        dataEUR.add(new CurrencyRate(LocalDate.now().minusDays(1), CurrencyTypes.EUR, 6d));
         dataEUR.add(new CurrencyRate(LocalDate.now(), CurrencyTypes.EUR, 7d));
+        dataEUR.add(new CurrencyRate(LocalDate.now().minusDays(1), CurrencyTypes.EUR, 6d));
+        dataEUR.add(new CurrencyRate(LocalDate.now().minusDays(2), CurrencyTypes.EUR, 5d));
+        dataEUR.add(new CurrencyRate(LocalDate.now().minusDays(3), CurrencyTypes.EUR, 4d));
+        dataEUR.add(new CurrencyRate(LocalDate.now().minusDays(4), CurrencyTypes.EUR, 3d));
+        dataEUR.add(new CurrencyRate(LocalDate.now().minusDays(5), CurrencyTypes.EUR, 2d));
+        dataEUR.add(new CurrencyRate(LocalDate.now().minusDays(6), CurrencyTypes.EUR, 1d));
 
     }
 
     @BeforeAll
     static void setMockito() {
-        when(currencyParser.getCurrencyRates(CurrencyTypes.USD, 7)).thenReturn(dataUSD);
-        when(currencyParser.getCurrencyRates(CurrencyTypes.EUR, 7)).thenReturn(dataEUR);
-        when(currencyParser.getCurrencyRates(CurrencyTypes.TRY, 7)).thenReturn(dataTRY);
+        when(currencyRepository.getRates(CurrencyTypes.USD, 7)).thenReturn(dataUSD);
+        when(currencyRepository.getRates(CurrencyTypes.EUR, 7)).thenReturn(dataEUR);
+        when(currencyRepository.getRates(CurrencyTypes.TRY, 7)).thenReturn(dataTRY);
     }
 
     @Test
     public void whenInputIsTomorrowUSDThenResultHas1String() {
-        List<CurrencyRate> rate_usd_tomorrow = new UserCommand("rate USD -date tomorrow -alg actual").execute(currencyParser);
+        UserCommand userCommand = new UserCommandParser( "rate USD -date tomorrow -alg mystic").getUserCommand().setRepository(currencyRepository);
+        userCommand.execute();
+        List<CurrencyRate> rate_usd_tomorrow = userCommand.getForecast();
         CurrencyRate tomorrowRate = new CurrencyRate(TOMORROW, CurrencyTypes.USD, 8d);
 
         assertThat(rate_usd_tomorrow.size()).isEqualTo(1);
@@ -79,7 +81,9 @@ public class UserCommandTest {
 
     @Test
     public void whenInputIsTomorrowEURThenResultHas1String() {
-        List<CurrencyRate> rate_eur_tomorrow = new UserCommand("rate EUR -date tomorrow -alg actual").execute(currencyParser);
+        UserCommand userCommand = new UserCommandParser("rate EUR -date tomorrow -alg mystic").getUserCommand().setRepository(currencyRepository);
+        userCommand.execute();
+        List<CurrencyRate> rate_eur_tomorrow = userCommand.getForecast();
         CurrencyRate tomorrowRate = new CurrencyRate(TOMORROW, CurrencyTypes.EUR, 4d);
 
         assertThat(rate_eur_tomorrow.size()).isEqualTo(1);
@@ -88,7 +92,9 @@ public class UserCommandTest {
 
     @Test
     public void whenInputIsTomorrowTRYThenResultHas1String() {
-        List<CurrencyRate> rate_try_tomorrow = new UserCommand("rate TRY -date tomorrow -alg actual").execute(currencyParser);
+        UserCommand userCommand = new UserCommandParser("rate TRY -date tomorrow -alg mystic").getUserCommand().setRepository(currencyRepository);
+        userCommand.execute();
+        List<CurrencyRate> rate_try_tomorrow = userCommand.getForecast();
         CurrencyRate tomorrowRate = new CurrencyRate(TOMORROW, CurrencyTypes.TRY, 16.6d);
 
         assertThat(rate_try_tomorrow.size()).isEqualTo(1);
@@ -97,7 +103,9 @@ public class UserCommandTest {
 
     @Test
     public void whenInputIsWeekUSDThenResultHas7String() {
-        List<CurrencyRate> rate_usd_week = new UserCommand("rate USD -period week -alg actual").execute(currencyParser);
+        UserCommand userCommand = new UserCommandParser("rate USD -period week -alg mystic").getUserCommand().setRepository(currencyRepository);
+        userCommand.execute();
+        List<CurrencyRate> rate_usd_week = userCommand.getForecast();
         CurrencyRate tomorrowRate = new CurrencyRate(TOMORROW, CurrencyTypes.USD, 8d);
         CurrencyRate secondDayRate = new CurrencyRate(THE_DAY_AFTER_TOMORROW, CurrencyTypes.USD, 8.43);
         CurrencyRate thirdDayRate = new CurrencyRate(THIRD_DAY, CurrencyTypes.USD, 8.78);
@@ -118,7 +126,9 @@ public class UserCommandTest {
 
     @Test
     public void whenInputIsWeekEURThenResultHas7String() {
-        List<CurrencyRate> rate_eur_week = new UserCommand("rate EUR -period week -alg actual").execute(currencyParser);
+        UserCommand userCommand = new UserCommandParser("rate EUR -period week -alg mystic").getUserCommand().setRepository(currencyRepository);
+        userCommand.execute();
+        List<CurrencyRate> rate_eur_week = userCommand.getForecast();
         CurrencyRate tomorrowRate = new CurrencyRate(TOMORROW, CurrencyTypes.EUR, 4d);
         CurrencyRate secondDayRate = new CurrencyRate(THE_DAY_AFTER_TOMORROW, CurrencyTypes.EUR, 4.43);
         CurrencyRate thirdDayRate = new CurrencyRate(THIRD_DAY, CurrencyTypes.EUR, 4.78);
@@ -139,7 +149,9 @@ public class UserCommandTest {
 
     @Test
     public void whenInputIsWeekTRYThenResultHas7String() {
-        List<CurrencyRate> rate_try_week = new UserCommand("rate TRY -period week -alg actual").execute(currencyParser);
+        UserCommand userCommand = new UserCommandParser("rate TRY -period week -alg mystic").getUserCommand().setRepository(currencyRepository);
+        userCommand.execute();
+        List<CurrencyRate> rate_try_week = userCommand.getForecast();
         CurrencyRate tomorrowRate = new CurrencyRate(TOMORROW, CurrencyTypes.TRY, 16.6d);
         CurrencyRate secondDayRate = new CurrencyRate(THE_DAY_AFTER_TOMORROW, CurrencyTypes.TRY, 18.26);
         CurrencyRate thirdDayRate = new CurrencyRate(THIRD_DAY, CurrencyTypes.TRY, 19.87);
