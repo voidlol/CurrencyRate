@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -23,6 +24,8 @@ public class CSVParser implements CurrencyParser {
         localizedCurrencyNames.put("Евро", CurrencyTypes.EUR);
         localizedCurrencyNames.put("Турецкая лира", CurrencyTypes.TRY);
         localizedCurrencyNames.put("Доллар США", CurrencyTypes.USD);
+        localizedCurrencyNames.put("Армянский Драм", CurrencyTypes.AMD);
+        localizedCurrencyNames.put("Болгарский лев", CurrencyTypes.BGN);
     }
 
     /**
@@ -32,15 +35,15 @@ public class CSVParser implements CurrencyParser {
      * @return List of CurrencyRate
      */
     @Override
-    public List<CurrencyRate> getCurrencyRates(CurrencyTypes type, int dataLength) {
+    public List<CurrencyRate> getCurrencyRates(CurrencyTypes type) {
         List<CurrencyRate> rates = new ArrayList<>();
         try (InputStream is = this.getClass().getResourceAsStream("/" + type + FILENAME_SUFFIX);
-             BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
-            br.lines().skip(1).limit(dataLength).forEach(l -> rates.add(parseCurrencyRate(l)));
+             BufferedReader br = new BufferedReader(new InputStreamReader(is, "windows-1251"))) {
+            br.lines().skip(1).forEach(l -> rates.add(parseCurrencyRate(l)));
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        rates.sort((currencyRate1, currencyRate2) -> currencyRate2.getDate().compareTo(currencyRate1.getDate()));
         return rates;
     }
 
