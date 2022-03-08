@@ -1,96 +1,92 @@
 package ru.liga.input;
 
+import com.github.sh0nk.matplotlib4j.NumpyUtils;
+import com.github.sh0nk.matplotlib4j.Plot;
+import com.github.sh0nk.matplotlib4j.PythonExecutionException;
+import lombok.Getter;
+import lombok.Setter;
 import ru.liga.currencies.CurrencyRate;
 import ru.liga.currencies.CurrencyTypes;
-import ru.liga.data.CurrencyParser;
-import ru.liga.exceptions.InvalidArgumentException;
-import ru.liga.exceptions.InvalidCurrencyException;
-import ru.liga.exceptions.InvalidRangeException;
-import ru.liga.prediction.AlgorithmTypes;
 import ru.liga.prediction.CurrencyPredictor;
-import ru.liga.prediction.RangeTypes;
+import ru.liga.repository.CurrencyRepository;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Setter
+@Getter
 public class UserCommand {
-    private static final String DATE_ARG = "-date";
-    private static final String PERIOD_ARG = "-period";
-    private static final String ALG_ARG = "-alg";
-    private static final String OUTPUT_ARG = "-output";
-    private static final int CURRENCY_INDEX = 1;
 
-    private final Map<String, String> arguments = new HashMap<>();
-    private List<CurrencyTypes> currencyTypes;
     private LocalDate targetDate;
-    private AlgorithmTypes algorithmTypes;
-    private boolean isRange = false;
+    private CurrencyPredictor algorithm;
+    private Set<CurrencyTypes> currencyTypes;
+    private boolean isGraph;
+    private boolean isRange;
+    private List<CurrencyRate> forecast;
+    private final String fileName;
+    private CurrencyRepository repository;
+    private int days;
 
-    public UserCommand(String userInput) {
-        String[] args = userInput.split(" ");
-        for (int i = 0; i < args.length; i++) {
-            if (args[i].startsWith("-")) {
-                try {
-                    arguments.put(args[i++], args[i]);
-                } catch (IndexOutOfBoundsException e) {
-                    throw new InvalidArgumentException("Wrong command!");
-                }
+    public UserCommand(String inputString) {
+        fileName = "png/" + LocalDate.now() + inputString + ".png";
+    }
+
+    public UserCommand setRepository(CurrencyRepository repository) {
+        this.repository = repository;
+        return this;
+    }
+
+    public void execute() {
+        if (isGraph) {
+            Map<CurrencyTypes, List<CurrencyRate>> data = new EnumMap<>(CurrencyTypes.class);
+            for (CurrencyTypes type: currencyTypes) {
+                data.put(type, algorithm.predict(repository, type, targetDate, isRange));
             }
-        }
-        readAlgorithm();
-        readCurrencyType(args[CURRENCY_INDEX]);
-        readDate();
-    }
-
-    public List<CurrencyRate> execute(CurrencyParser parser) {
-        CurrencyTypes type = currencyTypes.get(0);
-        CurrencyPredictor predictor = algorithmTypes.getAlgorithm();
-        List<CurrencyRate> currencyRates = parser.getCurrencyRates(type, predictor.getRequiredDataSize());
-        return predictor.predict(currencyRates, targetDate, isRange);
-    }
-
-
-    private void readDate() {
-        try {
-            if (arguments.containsKey(DATE_ARG) && arguments.containsKey(PERIOD_ARG)) {
-                throw new InvalidArgumentException("Specify date OR period!");
-            } else if (arguments.containsKey(DATE_ARG)) {
-                targetDate = arguments.get(DATE_ARG).equals("tomorrow") ? LocalDate.now().plusDays(1) : LocalDate.parse(arguments.get(DATE_ARG), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-                if (!targetDate.isAfter(LocalDate.now())) {
-                    throw new InvalidRangeException("Date can only be a future date");
-                }
-            } else if (arguments.containsKey(PERIOD_ARG)) {
-                targetDate = LocalDate.now().plusDays(RangeTypes.findByName(arguments.get(PERIOD_ARG)).getDays());
-                isRange = true;
-            } else {
-                throw new InvalidArgumentException("No date or period!");
-            }
-        } catch (NullPointerException | DateTimeParseException e) {
-            throw new InvalidRangeException("Wrong date or period!");
-        }
-    }
-
-    private void readCurrencyType(String currencies) {
-        currencyTypes = Arrays.stream(currencies.split(",")).map(CurrencyTypes::findByName).collect(Collectors.toList());
-        if (currencyTypes.stream().anyMatch(Objects::isNull)) {
-            throw new InvalidCurrencyException("Wrong currency");
-        }
-        if (currencyTypes.size() > 1 && currencyTypes.size() < 5 && !(arguments.containsKey(OUTPUT_ARG) && arguments.get(OUTPUT_ARG).equals("graph"))) {
-            throw new InvalidArgumentException("Use -output graph when choosing more than 1 currency");
-        }
-    }
-
-    private void readAlgorithm() {
-        if (arguments.containsKey(ALG_ARG)) {
-            algorithmTypes = AlgorithmTypes.findByName(arguments.get(ALG_ARG));
-            if (algorithmTypes == null) {
-                throw new InvalidArgumentException("Wrong algorithm!");
+            try {
+                generateGraph(data);
+            } catch (PythonExecutionException | IOException e) {
+                e.printStackTrace();
             }
         } else {
-            throw new InvalidArgumentException("No algorithm!");
+            CurrencyTypes type = currencyTypes.stream().findFirst().get();
+            this.forecast = algorithm.predict(repository, type, targetDate, isRange);
         }
+    }
+
+    private void generateGraph(Map<CurrencyTypes, List<CurrencyRate>> data) throws PythonExecutionException, IOException {
+        List<Double> x = NumpyUtils.linspace(1, days, days);
+        Plot plt = Plot.create();
+        for (List<CurrencyRate> currencyData : data.values()) {
+            List<Double> rates = currencyData.stream().map(CurrencyRate::getRate).collect(Collectors.toList());
+            plt.plot().add(x, rates);
+        }
+        plt.xlabel("Date");
+        plt.ylabel("Rate");
+        plt.savefig(fileName).dpi(200);
+        plt.executeSilently();
+    }
+
+    public List<CurrencyRate> getForecast() {
+        return this.forecast;
+    }
+
+    public File getGraphFile() {
+        return new File(fileName);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserCommand that = (UserCommand) o;
+        return isGraph() == that.isGraph() && isRange() == that.isRange() && Objects.equals(getTargetDate(), that.getTargetDate()) && Objects.equals(getAlgorithm(), that.getAlgorithm()) && Objects.equals(getCurrencyTypes(), that.getCurrencyTypes());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getTargetDate(), getAlgorithm(), getCurrencyTypes(), isGraph(), isRange());
     }
 }
