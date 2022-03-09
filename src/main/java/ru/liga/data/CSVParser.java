@@ -31,7 +31,6 @@ public class CSVParser implements CurrencyParser {
     /**
      * Reads CSV file to get Currency Rates
      * @param type type of currency to read
-     * @param dataLength - list size
      * @return List of CurrencyRate
      */
     @Override

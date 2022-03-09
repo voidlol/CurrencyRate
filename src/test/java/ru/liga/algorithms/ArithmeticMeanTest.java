@@ -1,4 +1,4 @@
-package ru.liga.controllers;
+package ru.liga.algorithms;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class UserCommandTest {
+public class ArithmeticMeanTest {
 
     private static final List<CurrencyRate> dataEUR = new ArrayList<>();
     private static final List<CurrencyRate> dataUSD = new ArrayList<>();

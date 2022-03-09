@@ -1,5 +1,6 @@
 package ru.liga.input;
 
+import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
@@ -8,20 +9,22 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.liga.currencies.CurrencyRate;
-import ru.liga.data.CSVParser;
 import ru.liga.exceptions.*;
-import ru.liga.repository.InMemoryCurrencyRepository;
+import ru.liga.repository.CurrencyRepository;
 
 import java.io.File;
 import java.util.List;
 
+@Slf4j
 public class Bot extends TelegramLongPollingCommandBot {
 
     private final String BOT_NAME;
     private final String BOT_TOKEN;
+    private final CurrencyRepository repository;
 
-    public Bot(String botName, String botToken) {
+    public Bot(String botName, String botToken, CurrencyRepository repository) {
         super();
+        this.repository = repository;
         this.BOT_NAME = botName;
         this.BOT_TOKEN = botToken;
     }
@@ -34,10 +37,11 @@ public class Bot extends TelegramLongPollingCommandBot {
     @Override
     public void processNonCommandUpdate(Update update) {
         Message userInput = update.getMessage();
+        log.info("Input: {}; from user: {}", userInput.getText(), userInput.getFrom().getUserName());
         try {
             UserCommand userCommand = new UserCommandParser(userInput.getText())
                     .getUserCommand()
-                    .setRepository(new InMemoryCurrencyRepository(new CSVParser()));
+                    .setRepository(repository);
             userCommand.execute();
             if (userCommand.isGraph()) {
                 File graph = userCommand.getGraphFile();

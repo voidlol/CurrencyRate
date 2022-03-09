@@ -39,6 +39,9 @@ public class UserCommand {
         return this;
     }
 
+    /**
+     * Executes this command.
+     */
     public void execute() {
         if (isGraph) {
             Map<CurrencyTypes, List<CurrencyRate>> data = new EnumMap<>(CurrencyTypes.class);

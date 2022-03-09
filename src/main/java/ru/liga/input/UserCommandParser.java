@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
-public class UserCommandParser {
+public class UserCommandParser implements Input {
 
     private final Map<String, String> keyValueArgs = new HashMap<>();
     private final UserCommand userCommand;
@@ -26,6 +26,19 @@ public class UserCommandParser {
     private static final String ALGORITHM_ARG_NAME = "-alg";
     private static final String OUTPUT_ARG_NAME = "-output";
 
+
+    /**
+     * Parses user input into UserCommand
+     * If fails throws:
+     * InvalidArgumentException
+     * InvalidAlgorithmException
+     * InvalidCurrencyException
+     * InvalidOutputException
+     * InvalidRangeException
+     *
+     * if succeed use getUserCommand()
+     * @param inputString
+     */
     public UserCommandParser(String inputString) {
         this.args = inputString.split(" ");
         userCommand = new UserCommand(inputString);
@@ -112,6 +125,8 @@ public class UserCommandParser {
             } else {
                 throw new InvalidRangeException(ErrorMessages.INVALID_NO_PERIOD_MULTI_CURRENCIES.getText());
             }
+        } else if (currencies.length == 1 && keyValueArgs.containsKey(OUTPUT_ARG_NAME) && keyValueArgs.get(OUTPUT_ARG_NAME).equalsIgnoreCase("graph")) {
+            throw new InvalidCurrencyException(ErrorMessages.INVALID_SINGLE_CURRENCY_GRAPH.getText());
         }
         Set<CurrencyTypes> typesSet = new HashSet<>();
         for (String currency : currencies) {

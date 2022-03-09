@@ -1,11 +1,14 @@
 package ru.liga.currencies;
 
+import lombok.Getter;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.Locale;
 import java.util.Objects;
 
+@Getter
 public class CurrencyRate {
 
     private final LocalDate date;
@@ -18,18 +21,11 @@ public class CurrencyRate {
         this.rate = rate;
     }
 
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public CurrencyTypes getType() {
-        return type;
-    }
-
-    public Double getRate() {
-        return rate;
-    }
-
+    /**
+     * Rounds rate to 2 decimals.
+     * Using 100 because it's 10^2, so we can round up to 2 decimals :)
+     * @return rounded rate to 2 decimals
+     */
     private Double getRoundedRate() {
         return Math.round(rate * 100) / 100d;
     }

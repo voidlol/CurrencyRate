@@ -13,6 +13,7 @@ public enum ErrorMessages {
     INVALID_CURRENCY("Available currencies: " + CurrencyTypes.getString()),
     INVALID_SAME_CURRENCY("You can't specify same currency more than one times."),
     INVALID_CURRENCY_AMOUNT("You can't pass more than 5 currencies at once!"),
+    INVALID_SINGLE_CURRENCY_GRAPH("Remove -output graph or add more currencies!"),
 
     INVALID_NO_DATE_OR_PERIOD("You must specify date or period!"),
     INVALID_DATE_AND_PERIOD("You can't choose date and period at same time."),
