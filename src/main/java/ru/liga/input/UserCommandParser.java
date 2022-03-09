@@ -125,7 +125,9 @@ public class UserCommandParser implements Input {
             } else {
                 throw new InvalidRangeException(ErrorMessages.INVALID_NO_PERIOD_MULTI_CURRENCIES.getText());
             }
-        } else if (currencies.length == 1 && keyValueArgs.containsKey(OUTPUT_ARG_NAME) && keyValueArgs.get(OUTPUT_ARG_NAME).equalsIgnoreCase("graph")) {
+        } else if (currencies.length == 1
+                && keyValueArgs.containsKey(OUTPUT_ARG_NAME)
+                && keyValueArgs.get(OUTPUT_ARG_NAME).equalsIgnoreCase("graph")) {
             throw new InvalidCurrencyException(ErrorMessages.INVALID_SINGLE_CURRENCY_GRAPH.getText());
         }
         Set<CurrencyTypes> typesSet = new HashSet<>();

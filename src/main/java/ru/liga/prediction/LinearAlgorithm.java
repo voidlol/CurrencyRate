@@ -17,7 +17,7 @@ public class LinearAlgorithm implements CurrencyPredictor {
     private static final int DATE_AMOUNT_TO_INTERPOLATE = 30;
 
     @Override
-    public List<CurrencyRate> predict(CurrencyRepository repository, CurrencyTypes type, LocalDate targetDate, boolean isRange) {
+    public List<CurrencyRate> getForecast(CurrencyRepository repository, CurrencyTypes type, LocalDate targetDate, boolean isRange) {
         List<CurrencyRate> data = repository.getRates(type, DATE_AMOUNT_TO_INTERPOLATE);
         LocalDate nextDay = data.get(0).getDate().plusDays(1);
         data.sort(Comparator.comparing(CurrencyRate::getDate));

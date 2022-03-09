@@ -19,7 +19,7 @@ public class ActualAlgorithm implements CurrencyPredictor {
     private static final int THREE_YEARS = 3;
 
     @Override
-    public List<CurrencyRate> predict(CurrencyRepository repository, CurrencyTypes type, LocalDate targetDate, boolean isRange) {
+    public List<CurrencyRate> getForecast(CurrencyRepository repository, CurrencyTypes type, LocalDate targetDate, boolean isRange) {
         LocalDate lastDate = repository.getRates(type, 1).get(0).getDate();
         if (targetDate.minusYears(TWO_YEARS).isAfter(lastDate)) {
             throw new InvalidRangeException(ErrorMessages.INVALID_DATE_IS_BEYOND.getText());

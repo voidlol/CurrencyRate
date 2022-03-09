@@ -7,7 +7,11 @@ import ru.liga.prediction.RangeTypes;
 
 @Getter
 public enum ErrorMessages {
-    INVALID_INPUT_FORMAT("Invalid command. Usage: rate [" + CurrencyTypes.getString() + "] [-date <DD.MM.YYYY | tomorrow>][-period + " + RangeTypes.getString() +"] [-alg " + AlgorithmTypes.getString() + "] [-output graph]"),
+    INVALID_INPUT_FORMAT("Invalid command. Usage: rate ["
+            + CurrencyTypes.getString()
+            + "] [-date <DD.MM.YYYY | tomorrow>][-period + "
+            + RangeTypes.getString() +"] [-alg "
+            + AlgorithmTypes.getString() + "] [-output graph]"),
     INVALID_COMMAND("Available commands: <rate>"),
 
     INVALID_CURRENCY("Available currencies: " + CurrencyTypes.getString()),

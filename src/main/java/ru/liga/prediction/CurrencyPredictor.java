@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface CurrencyPredictor {
 
-    List<CurrencyRate> predict(CurrencyRepository repository, CurrencyTypes type, LocalDate targetDate, boolean isRange);
+    List<CurrencyRate> getForecast(CurrencyRepository repository, CurrencyTypes type, LocalDate targetDate, boolean isRange);
 }

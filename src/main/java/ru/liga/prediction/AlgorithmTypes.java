@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public enum AlgorithmTypes {
-    ACTUAL(new ActualAlgorithm()), LINEAR(new LinearAlgorithm()), MYSTIC(new ArithmeticMean());
+    ACTUAL(new ActualAlgorithm()), LINEAR(new LinearAlgorithm()), MYSTIC(new MysticAlgorithm());
 
     private final CurrencyPredictor algorithm;
 
@@ -13,7 +13,9 @@ public enum AlgorithmTypes {
     }
 
     public static String getString() {
-        return Arrays.stream(values()).map(Enum::name).collect(Collectors.joining(" | ", "<", ">"));
+        return Arrays.stream(values())
+                .map(Enum::name)
+                .collect(Collectors.joining(" | ", "<", ">"));
     }
 
     public CurrencyPredictor getAlgorithm() {

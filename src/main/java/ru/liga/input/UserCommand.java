@@ -46,7 +46,7 @@ public class UserCommand {
         if (isGraph) {
             Map<CurrencyTypes, List<CurrencyRate>> data = new EnumMap<>(CurrencyTypes.class);
             for (CurrencyTypes type: currencyTypes) {
-                data.put(type, algorithm.predict(repository, type, targetDate, isRange));
+                data.put(type, algorithm.getForecast(repository, type, targetDate, isRange));
             }
             try {
                 generateGraph(data);
@@ -54,8 +54,10 @@ public class UserCommand {
                 e.printStackTrace();
             }
         } else {
-            CurrencyTypes type = currencyTypes.stream().findFirst().get();
-            this.forecast = algorithm.predict(repository, type, targetDate, isRange);
+            CurrencyTypes type = currencyTypes.stream()
+                    .findFirst()
+                    .get();
+            this.forecast = algorithm.getForecast(repository, type, targetDate, isRange);
         }
     }
 
@@ -63,10 +65,12 @@ public class UserCommand {
         List<Double> x = NumpyUtils.linspace(1, days, days);
         Plot plt = Plot.create();
         for (List<CurrencyRate> currencyData : data.values()) {
-            List<Double> rates = currencyData.stream().map(CurrencyRate::getRate).collect(Collectors.toList());
+            List<Double> rates = currencyData.stream()
+                    .map(CurrencyRate::getRate)
+                    .collect(Collectors.toList());
             plt.plot().add(x, rates);
         }
-        plt.xlabel("Date");
+        plt.xlabel("Days");
         plt.ylabel("Rate");
         plt.savefig(fileName).dpi(200);
         plt.executeSilently();
@@ -85,7 +89,11 @@ public class UserCommand {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserCommand that = (UserCommand) o;
-        return isGraph() == that.isGraph() && isRange() == that.isRange() && Objects.equals(getTargetDate(), that.getTargetDate()) && Objects.equals(getAlgorithm(), that.getAlgorithm()) && Objects.equals(getCurrencyTypes(), that.getCurrencyTypes());
+        return isGraph() == that.isGraph()
+                && isRange() == that.isRange()
+                && Objects.equals(getTargetDate(), that.getTargetDate())
+                && Objects.equals(getAlgorithm(), that.getAlgorithm())
+                && Objects.equals(getCurrencyTypes(), that.getCurrencyTypes());
     }
 
     @Override

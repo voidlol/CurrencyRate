@@ -27,7 +27,9 @@ public enum RangeTypes {
     }
 
     public static String getString() {
-        return Arrays.stream(values()).map(c -> c.name().toLowerCase()).collect(Collectors.joining(" | ", "<", ">"));
+        return Arrays.stream(values())
+                .map(c -> c.name().toLowerCase())
+                .collect(Collectors.joining(" | ", "<", ">"));
     }
 
 }
