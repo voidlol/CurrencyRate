@@ -4,8 +4,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import ru.liga.currencies.CurrencyRate;
 import ru.liga.currencies.CurrencyTypes;
+import ru.liga.executors.CommandExecutor;
+import ru.liga.executors.DataCommandExecutor;
+import ru.liga.executors.ExecutorController;
 import ru.liga.input.UserCommand;
 import ru.liga.input.UserCommandParser;
+import ru.liga.output.CommandResult;
 import ru.liga.repository.CurrencyRepository;
 
 import java.time.LocalDate;
@@ -70,9 +74,11 @@ public class ArithmeticMeanTest {
 
     @Test
     public void whenInputIsTomorrowUSDThenResultHas1String() {
-        UserCommand userCommand = new UserCommandParser( "rate USD -date tomorrow -alg mystic").getUserCommand().setRepository(currencyRepository);
-        userCommand.execute();
-        List<CurrencyRate> rate_usd_tomorrow = userCommand.getForecast();
+        UserCommand userCommand = new UserCommandParser( "rate USD -date tomorrow -alg mystic").getUserCommand();
+        CommandExecutor executor = new ExecutorController(currencyRepository).getExecutor(userCommand);
+        CommandResult result = executor.execute();
+
+        List<CurrencyRate> rate_usd_tomorrow = result.getListResult();
         CurrencyRate tomorrowRate = new CurrencyRate(TOMORROW, CurrencyTypes.USD, 8d);
 
         assertThat(rate_usd_tomorrow.size()).isEqualTo(1);
@@ -81,9 +87,11 @@ public class ArithmeticMeanTest {
 
     @Test
     public void whenInputIsTomorrowEURThenResultHas1String() {
-        UserCommand userCommand = new UserCommandParser("rate EUR -date tomorrow -alg mystic").getUserCommand().setRepository(currencyRepository);
-        userCommand.execute();
-        List<CurrencyRate> rate_eur_tomorrow = userCommand.getForecast();
+        UserCommand userCommand = new UserCommandParser("rate EUR -date tomorrow -alg mystic").getUserCommand();
+        CommandExecutor executor = new ExecutorController(currencyRepository).getExecutor(userCommand);
+        CommandResult result = executor.execute();
+
+        List<CurrencyRate> rate_eur_tomorrow = result.getListResult();
         CurrencyRate tomorrowRate = new CurrencyRate(TOMORROW, CurrencyTypes.EUR, 4d);
 
         assertThat(rate_eur_tomorrow.size()).isEqualTo(1);
@@ -92,9 +100,11 @@ public class ArithmeticMeanTest {
 
     @Test
     public void whenInputIsTomorrowTRYThenResultHas1String() {
-        UserCommand userCommand = new UserCommandParser("rate TRY -date tomorrow -alg mystic").getUserCommand().setRepository(currencyRepository);
-        userCommand.execute();
-        List<CurrencyRate> rate_try_tomorrow = userCommand.getForecast();
+        UserCommand userCommand = new UserCommandParser("rate TRY -date tomorrow -alg mystic").getUserCommand();
+        CommandExecutor executor = new ExecutorController(currencyRepository).getExecutor(userCommand);
+        CommandResult result = executor.execute();
+
+        List<CurrencyRate> rate_try_tomorrow = result.getListResult();
         CurrencyRate tomorrowRate = new CurrencyRate(TOMORROW, CurrencyTypes.TRY, 16.6d);
 
         assertThat(rate_try_tomorrow.size()).isEqualTo(1);
@@ -103,9 +113,10 @@ public class ArithmeticMeanTest {
 
     @Test
     public void whenInputIsWeekUSDThenResultHas7String() {
-        UserCommand userCommand = new UserCommandParser("rate USD -period week -alg mystic").getUserCommand().setRepository(currencyRepository);
-        userCommand.execute();
-        List<CurrencyRate> rate_usd_week = userCommand.getForecast();
+        UserCommand userCommand = new UserCommandParser("rate USD -period week -alg mystic").getUserCommand();
+        CommandExecutor executor = new ExecutorController(currencyRepository).getExecutor(userCommand);
+        CommandResult result = executor.execute();
+        List<CurrencyRate> rate_usd_week = result.getListResult();
         CurrencyRate tomorrowRate = new CurrencyRate(TOMORROW, CurrencyTypes.USD, 8d);
         CurrencyRate secondDayRate = new CurrencyRate(THE_DAY_AFTER_TOMORROW, CurrencyTypes.USD, 8.43);
         CurrencyRate thirdDayRate = new CurrencyRate(THIRD_DAY, CurrencyTypes.USD, 8.78);
@@ -126,9 +137,10 @@ public class ArithmeticMeanTest {
 
     @Test
     public void whenInputIsWeekEURThenResultHas7String() {
-        UserCommand userCommand = new UserCommandParser("rate EUR -period week -alg mystic").getUserCommand().setRepository(currencyRepository);
-        userCommand.execute();
-        List<CurrencyRate> rate_eur_week = userCommand.getForecast();
+        UserCommand userCommand = new UserCommandParser("rate EUR -period week -alg mystic").getUserCommand();
+        CommandExecutor executor = new ExecutorController(currencyRepository).getExecutor(userCommand);
+        CommandResult result = executor.execute();
+        List<CurrencyRate> rate_eur_week = result.getListResult();
         CurrencyRate tomorrowRate = new CurrencyRate(TOMORROW, CurrencyTypes.EUR, 4d);
         CurrencyRate secondDayRate = new CurrencyRate(THE_DAY_AFTER_TOMORROW, CurrencyTypes.EUR, 4.43);
         CurrencyRate thirdDayRate = new CurrencyRate(THIRD_DAY, CurrencyTypes.EUR, 4.78);
@@ -149,9 +161,10 @@ public class ArithmeticMeanTest {
 
     @Test
     public void whenInputIsWeekTRYThenResultHas7String() {
-        UserCommand userCommand = new UserCommandParser("rate TRY -period week -alg mystic").getUserCommand().setRepository(currencyRepository);
-        userCommand.execute();
-        List<CurrencyRate> rate_try_week = userCommand.getForecast();
+        UserCommand userCommand = new UserCommandParser("rate TRY -period week -alg mystic").getUserCommand();
+        CommandExecutor executor = new ExecutorController(currencyRepository).getExecutor(userCommand);
+        CommandResult result = executor.execute();
+        List<CurrencyRate> rate_try_week = result.getListResult();
         CurrencyRate tomorrowRate = new CurrencyRate(TOMORROW, CurrencyTypes.TRY, 16.6d);
         CurrencyRate secondDayRate = new CurrencyRate(THE_DAY_AFTER_TOMORROW, CurrencyTypes.TRY, 18.26);
         CurrencyRate thirdDayRate = new CurrencyRate(THIRD_DAY, CurrencyTypes.TRY, 19.87);

@@ -97,7 +97,7 @@ public class UserCommandParser implements Input {
         if (type == null) {
             throw new InvalidRangeException(ErrorMessages.INVALID_PERIOD.getText());
         }
-        userCommand.setRange(true);
+        userCommand.setRangeType(RangeTypes.findByName(keyValueArgs.get(PERIOD_ARG_NAME)));
         userCommand.setTargetDate(LocalDate.now().plusDays(type.getDays()));
         validateAlgorithm();
     }
@@ -119,7 +119,7 @@ public class UserCommandParser implements Input {
         if (currencies.length > 5) {
             throw new InvalidCurrencyException(ErrorMessages.INVALID_CURRENCY_AMOUNT.getText());
         } else if (currencies.length > 1) {
-            if (userCommand.isRange()) {
+            if (userCommand.getRangeType() != null) {
                 validateOutput();
                 userCommand.setGraph(true);
             } else {
@@ -145,10 +145,10 @@ public class UserCommandParser implements Input {
     }
 
     private void validateOutput() {
-        if (!keyValueArgs.containsKey(OUTPUT_ARG_NAME) || !keyValueArgs.get(OUTPUT_ARG_NAME).equalsIgnoreCase("graph")) {
+        if (!keyValueArgs.containsKey(OUTPUT_ARG_NAME)
+                || !keyValueArgs.get(OUTPUT_ARG_NAME).equalsIgnoreCase("graph")) {
             throw new InvalidOutputException(ErrorMessages.INVALID_OUTPUT.getText());
         }
-        userCommand.setDays(RangeTypes.findByName(keyValueArgs.get(PERIOD_ARG_NAME)).getDays());
     }
 
     private void validateDate() {

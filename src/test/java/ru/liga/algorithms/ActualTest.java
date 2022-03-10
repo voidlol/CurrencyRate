@@ -4,8 +4,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import ru.liga.currencies.CurrencyRate;
 import ru.liga.currencies.CurrencyTypes;
+import ru.liga.executors.CommandExecutor;
+import ru.liga.executors.DataCommandExecutor;
+import ru.liga.executors.ExecutorController;
 import ru.liga.input.UserCommand;
 import ru.liga.input.UserCommandParser;
+import ru.liga.output.CommandResult;
 import ru.liga.repository.CurrencyRepository;
 
 import java.time.LocalDate;
@@ -39,10 +43,10 @@ class ActualTest {
     @Test
     void whenUSDThenOneResult() {
         UserCommand userCommand = new UserCommandParser("rate USD -date 20.03.2022 -alg actual").getUserCommand();
-        userCommand.setRepository(repository);
-        userCommand.execute();
+        CommandExecutor executor = new ExecutorController(repository).getExecutor(userCommand);
+        CommandResult result = executor.execute();
 
-        List<CurrencyRate> forecast = userCommand.getForecast();
+        List<CurrencyRate> forecast = result.getListResult();
         CurrencyRate actual = forecast.get(0);
         CurrencyRate expected = new CurrencyRate(LocalDate.of(2022, 3, 20), CurrencyTypes.USD, 20D);
         assertThat(expected).isEqualTo(actual);

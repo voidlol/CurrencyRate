@@ -8,12 +8,12 @@ import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ru.liga.currencies.CurrencyRate;
-import ru.liga.exceptions.*;
+import ru.liga.exceptions.BaseException;
+import ru.liga.executors.CommandExecutor;
+import ru.liga.executors.DataCommandExecutor;
+import ru.liga.executors.ExecutorController;
+import ru.liga.output.CommandResult;
 import ru.liga.repository.CurrencyRepository;
-
-import java.io.File;
-import java.util.List;
 
 @Slf4j
 public class Bot extends TelegramLongPollingCommandBot {
@@ -40,16 +40,10 @@ public class Bot extends TelegramLongPollingCommandBot {
         log.info("Input: {}; from user: {}", userInput.getText(), userInput.getFrom().getUserName());
         try {
             UserCommand userCommand = new UserCommandParser(userInput.getText())
-                    .getUserCommand()
-                    .setRepository(repository);
-            userCommand.execute();
-            if (userCommand.isGraph()) {
-                File graph = userCommand.getGraphFile();
-                setAnswer(userInput.getChatId(), userInput.getFrom().getUserName(), graph);
-            } else {
-                List<CurrencyRate> answer = userCommand.getForecast();
-                setAnswer(userInput.getChatId(), userInput.getFrom().getUserName(), answer);
-            }
+                    .getUserCommand();
+            CommandExecutor executor = new ExecutorController(repository).getExecutor(userCommand);
+            CommandResult result = executor.execute();
+            setAnswer(userInput.getChatId(), userInput.getFrom().getUserName(), result);
         } catch (BaseException e) {
             setAnswer(userInput.getChatId(), userInput.getFrom().getUserName(), e.getMessage());
         }
@@ -60,25 +54,6 @@ public class Bot extends TelegramLongPollingCommandBot {
         return BOT_TOKEN;
     }
 
-    /**
-     * Отправка ответа
-     * @param chatId chat Id :)
-     * @param userName userName
-     * @param data List of data to display
-     */
-    private void setAnswer(Long chatId, String userName, List<CurrencyRate> data) {
-        SendMessage answer = new SendMessage();
-        StringBuilder stringBuilder = new StringBuilder();
-        data.forEach(currencyRate -> stringBuilder.append(currencyRate).append("\n"));
-        answer.setText(stringBuilder.toString());
-        answer.setChatId(chatId.toString());
-        try {
-            execute(answer);
-        } catch (TelegramApiException e) {
-            //логируем сбой Telegram Bot API, используя userName
-        }
-    }
-
     private void setAnswer(Long chatId, String userName, String error) {
         SendMessage answer = new SendMessage();
         answer.setChatId(chatId.toString());
@@ -86,18 +61,26 @@ public class Bot extends TelegramLongPollingCommandBot {
         try {
             execute(answer);
         } catch (TelegramApiException e) {
-            //логируем сбой Telegram Bot API, используя userName
+            log.error("Error: {}; from: {}; result: {}", e.getMessage(), userName, error);
         }
     }
 
-    private void setAnswer(Long chatId, String userName, File graph) {
-        SendPhoto answer = new SendPhoto();
-        answer.setChatId(chatId.toString());
-        answer.setPhoto(new InputFile(graph));
+    private void setAnswer(Long chatId, String userName, CommandResult result) {
         try {
-            execute(answer);
+            if (result.isText()) {
+                SendMessage answer = new SendMessage();
+                answer.setChatId(chatId.toString());
+                answer.setText(result.getTextResult());
+                execute(answer);
+            } else {
+                SendPhoto answer = new SendPhoto();
+                answer.setChatId(chatId.toString());
+                answer.setPhoto(new InputFile(result.getGraphResult()));
+                execute(answer);
+            }
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            log.error("Error: {}; from: {}; result: {}", e.getMessage(), userName, result);
         }
     }
+
 }
