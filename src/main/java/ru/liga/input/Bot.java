@@ -8,10 +8,9 @@ import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ru.liga.exceptions.BaseException;
-import ru.liga.executors.CommandExecutor;
-import ru.liga.executors.DataCommandExecutor;
-import ru.liga.executors.ExecutorController;
+import ru.liga.exception.BaseException;
+import ru.liga.executor.CommandExecutor;
+import ru.liga.executor.ExecutorController;
 import ru.liga.output.CommandResult;
 import ru.liga.repository.CurrencyRepository;
 
@@ -39,12 +38,12 @@ public class Bot extends TelegramLongPollingCommandBot {
         Message userInput = update.getMessage();
         log.info("Input: {}; from user: {}", userInput.getText(), userInput.getFrom().getUserName());
         try {
-            UserCommand userCommand = new UserCommandParser(userInput.getText())
-                    .getUserCommand();
+            UserCommand userCommand = UserCommand.getBuilder(userInput.getText()).build();
             CommandExecutor executor = new ExecutorController(repository).getExecutor(userCommand);
             CommandResult result = executor.execute();
             setAnswer(userInput.getChatId(), userInput.getFrom().getUserName(), result);
         } catch (BaseException e) {
+            log.error(e.getMessage());
             setAnswer(userInput.getChatId(), userInput.getFrom().getUserName(), e.getMessage());
         }
     }

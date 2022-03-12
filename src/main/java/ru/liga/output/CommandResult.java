@@ -1,7 +1,7 @@
 package ru.liga.output;
 
 import lombok.Getter;
-import ru.liga.currencies.CurrencyRate;
+import ru.liga.currency.CurrencyRate;
 
 import java.io.File;
 import java.util.List;

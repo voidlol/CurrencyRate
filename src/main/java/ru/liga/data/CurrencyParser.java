@@ -1,7 +1,7 @@
 package ru.liga.data;
 
-import ru.liga.currencies.CurrencyRate;
-import ru.liga.currencies.CurrencyTypes;
+import ru.liga.currency.CurrencyRate;
+import ru.liga.type.CurrencyTypes;
 
 import java.util.List;
 

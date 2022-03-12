@@ -1,5 +1,6 @@
 package ru.liga;
 
+import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
@@ -7,7 +8,11 @@ import ru.liga.data.CSVParser;
 import ru.liga.input.*;
 import ru.liga.repository.InMemoryCurrencyRepository;
 
+@Slf4j
 public class App {
+
+    private static final String BOT_NAME = "currencyrate_bot";
+    private static final String BOT_TOKEN = "5156488335:AAEEaAVzyyR4HXOEYsjjPHvlNtY6Qv4te9I";
 
     public static void main(String[] args) {
         try {
@@ -15,7 +20,7 @@ public class App {
             Bot bot = new Bot(BOT_NAME, BOT_TOKEN, new InMemoryCurrencyRepository(new CSVParser()));
             botsApi.registerBot(bot);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            log.error("Error in psvm: ", e);
         }
     }
 }
