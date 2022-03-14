@@ -38,7 +38,7 @@ public class Bot extends TelegramLongPollingCommandBot {
         Message userInput = update.getMessage();
         log.info("Input: {}; from user: {}", userInput.getText(), userInput.getFrom().getUserName());
         try {
-            UserCommand userCommand = UserCommand.getBuilder(userInput.getText()).build();
+            UserCommand userCommand = UserCommand.createFromString(userInput.getText());
             CommandExecutor executor = new ExecutorController(repository).getExecutor(userCommand);
             CommandResult result = executor.execute();
             setAnswer(userInput.getChatId(), userInput.getFrom().getUserName(), result);

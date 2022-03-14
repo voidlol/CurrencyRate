@@ -1,6 +1,7 @@
 package ru.liga.algorithm;
 
 import ru.liga.currency.CurrencyRate;
+import ru.liga.input.Period;
 import ru.liga.type.CurrencyTypes;
 import ru.liga.repository.CurrencyRepository;
 
@@ -16,7 +17,7 @@ public class LinearAlgorithm implements CurrencyForecaster {
     private static final int DAYS_AMOUNT_TO_INTERPOLATE = 30;
 
     @Override
-    public List<CurrencyRate> getForecast(CurrencyRepository repository, CurrencyTypes type, LocalDate targetDate, boolean isRange) {
+    public List<CurrencyRate> getForecast(CurrencyRepository repository, CurrencyTypes type, Period period) {
         List<CurrencyRate> data = repository.getRates(type, DAYS_AMOUNT_TO_INTERPOLATE);
         LocalDate nextDay = data.get(0).getDate().plusDays(1);
         data.sort(Comparator.comparing(CurrencyRate::getDate));
@@ -35,9 +36,9 @@ public class LinearAlgorithm implements CurrencyForecaster {
             }
             nextDay = nextDay.plusDays(1);
             i++;
-        } while (!nextDay.isAfter(targetDate));
+        } while (!nextDay.isAfter(period.getTargetDate()));
 
-        if (isRange) {
+        if (period.isRange()) {
             return result;
         } else {
             Collections.reverse(result);

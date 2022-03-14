@@ -25,7 +25,7 @@ public class DataCommandExecutor implements CommandExecutor {
     }
 
     private List<CurrencyRate> getForecast(CurrencyTypes type) {
-        return command.getAlgorithm().getForecast(repository, type, command.getTargetDate(), command.getRangeType() != null);
+        return command.getAlgorithm().getForecast(repository, type, command.getPeriod());
     }
 
 }

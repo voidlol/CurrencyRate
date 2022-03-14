@@ -1,13 +1,12 @@
 package ru.liga.executor;
 
-import com.github.sh0nk.matplotlib4j.NumpyUtils;
 import com.github.sh0nk.matplotlib4j.Plot;
 import com.github.sh0nk.matplotlib4j.PythonExecutionException;
 import ru.liga.currency.CurrencyRate;
-import ru.liga.type.CurrencyTypes;
 import ru.liga.input.UserCommand;
 import ru.liga.output.CommandResult;
 import ru.liga.repository.CurrencyRepository;
+import ru.liga.type.CurrencyTypes;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +48,7 @@ public class GraphCommandExecutor implements CommandExecutor {
     }
 
     private List<CurrencyRate> getForecast(CurrencyTypes type) {
-        return command.getAlgorithm().getForecast(repository, type, command.getTargetDate(), true);
+        return command.getAlgorithm().getForecast(repository, type, command.getPeriod());
     }
 
 
@@ -57,15 +56,13 @@ public class GraphCommandExecutor implements CommandExecutor {
         if (new File(fileName).exists()) {
             return;
         }
-        int days = command.getRangeType().getDays();
-        List<Double> x = NumpyUtils.linspace(1, days, days);
         Plot plt = Plot.create();
         plt.title("Exchange rate");
         for (Map.Entry<CurrencyTypes, List<CurrencyRate>> entry : data.entrySet()) {
             List<Double> rates = entry.getValue().stream()
                     .map(CurrencyRate::getRate)
                     .collect(Collectors.toList());
-            plt.plot().add(x, rates).label(entry.getKey().name());
+            plt.plot().add(rates).label(entry.getKey().name());
         }
         plt.legend();
 

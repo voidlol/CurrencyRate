@@ -12,6 +12,6 @@ public class ConsoleInput implements Input {
 
     @Override
     public UserCommand getUserCommand() {
-        return UserCommand.getBuilder(scanner.nextLine()).build();
+        return UserCommand.createFromString(scanner.nextLine());
     }
 }

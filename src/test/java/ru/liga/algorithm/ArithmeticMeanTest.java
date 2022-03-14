@@ -72,7 +72,7 @@ class ArithmeticMeanTest {
 
     @Test
     void whenInputIsTomorrowUSDThenResultHas1String() {
-        UserCommand userCommand = UserCommand.getBuilder( "rate USD -date tomorrow -alg mystic").build();
+        UserCommand userCommand = UserCommand.createFromString( "rate USD -date tomorrow -alg mean");
         CommandExecutor executor = new ExecutorController(currencyRepository).getExecutor(userCommand);
         CommandResult result = executor.execute();
 
@@ -85,7 +85,7 @@ class ArithmeticMeanTest {
 
     @Test
     void whenInputIsTomorrowEURThenResultHas1String() {
-        UserCommand userCommand = UserCommand.getBuilder("rate EUR -date tomorrow -alg mystic").build();
+        UserCommand userCommand = UserCommand.createFromString("rate EUR -date tomorrow -alg mean");
         CommandExecutor executor = new ExecutorController(currencyRepository).getExecutor(userCommand);
         CommandResult result = executor.execute();
 
@@ -98,7 +98,7 @@ class ArithmeticMeanTest {
 
     @Test
     void whenInputIsTomorrowTRYThenResultHas1String() {
-        UserCommand userCommand = UserCommand.getBuilder("rate TRY -date tomorrow -alg mystic").build();
+        UserCommand userCommand = UserCommand.createFromString("rate TRY -date tomorrow -alg mean");
         CommandExecutor executor = new ExecutorController(currencyRepository).getExecutor(userCommand);
         CommandResult result = executor.execute();
 
@@ -111,7 +111,7 @@ class ArithmeticMeanTest {
 
     @Test
     void whenInputIsWeekUSDThenResultHas7String() {
-        UserCommand userCommand = UserCommand.getBuilder("rate USD -period week -alg mystic").build();
+        UserCommand userCommand = UserCommand.createFromString("rate USD -period week -alg mean");
         CommandExecutor executor = new ExecutorController(currencyRepository).getExecutor(userCommand);
         CommandResult result = executor.execute();
         List<CurrencyRate> rate_usd_week = result.getListResult();
@@ -135,7 +135,7 @@ class ArithmeticMeanTest {
 
     @Test
     void whenInputIsWeekEURThenResultHas7String() {
-        UserCommand userCommand = UserCommand.getBuilder("rate EUR -period week -alg mystic").build();
+        UserCommand userCommand = UserCommand.createFromString("rate EUR -period week -alg mean");
         CommandExecutor executor = new ExecutorController(currencyRepository).getExecutor(userCommand);
         CommandResult result = executor.execute();
         List<CurrencyRate> rate_eur_week = result.getListResult();
@@ -159,7 +159,7 @@ class ArithmeticMeanTest {
 
     @Test
     void whenInputIsWeekTRYThenResultHas7String() {
-        UserCommand userCommand = UserCommand.getBuilder("rate TRY -period week -alg mystic").build();
+        UserCommand userCommand = UserCommand.createFromString("rate TRY -period week -alg mean");
         CommandExecutor executor = new ExecutorController(currencyRepository).getExecutor(userCommand);
         CommandResult result = executor.execute();
         List<CurrencyRate> rate_try_week = result.getListResult();

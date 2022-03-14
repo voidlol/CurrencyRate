@@ -40,7 +40,7 @@ class ActualTest {
 
     @Test
     void whenUSDThenOneResult() {
-        UserCommand userCommand = UserCommand.getBuilder("rate USD -date 20.03.2022 -alg actual").build();
+        UserCommand userCommand = UserCommand.createFromString("rate USD -date 20.03.2022 -alg actual");
         CommandExecutor executor = new ExecutorController(repository).getExecutor(userCommand);
         CommandResult result = executor.execute();
 

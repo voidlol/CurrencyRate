@@ -1,6 +1,7 @@
 package ru.liga.algorithm;
 
 import ru.liga.currency.CurrencyRate;
+import ru.liga.input.Period;
 import ru.liga.type.CurrencyTypes;
 import ru.liga.repository.CurrencyRepository;
 
@@ -20,7 +21,7 @@ public class MysticAlgorithm implements CurrencyForecaster {
     }
 
     @Override
-    public List<CurrencyRate> getForecast(CurrencyRepository repository, CurrencyTypes type, LocalDate targetDate, boolean isRange) {
+    public List<CurrencyRate> getForecast(CurrencyRepository repository, CurrencyTypes type, Period period) {
         List<CurrencyRate> fullMoonRates = new ArrayList<>();
         fullMoonList.forEach(d -> fullMoonRates.add(repository.getRateForDate(type, d)));
 
@@ -29,16 +30,16 @@ public class MysticAlgorithm implements CurrencyForecaster {
                 .average().orElse(0D);
 
         List<CurrencyRate> result = new ArrayList<>();
-        if (isRange) {
+        if (period.isRange()) {
             CurrencyRate lastRate = new CurrencyRate(LocalDate.now().plusDays(1), type, averageRate);
             result.add(lastRate);
-            while (!lastRate.getDate().isEqual(targetDate)) {
+            while (!lastRate.getDate().isEqual(period.getTargetDate())) {
                 Double newRate = getNewRate(lastRate.getRate());
                 lastRate = new CurrencyRate(lastRate.getDate().plusDays(1), type, newRate);
                 result.add(lastRate);
             }
         } else {
-            result.add(new CurrencyRate(targetDate, type, averageRate));
+            result.add(new CurrencyRate(period.getTargetDate(), type, averageRate));
         }
         return result;
     }

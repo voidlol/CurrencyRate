@@ -1,6 +1,7 @@
 package ru.liga.validator;
 
 import ru.liga.exception.InvalidCurrencyException;
+import ru.liga.type.CommandOptions;
 import ru.liga.type.CurrencyTypes;
 import ru.liga.type.ErrorMessages;
 
@@ -35,7 +36,7 @@ public class CurrencyValidator implements Validator<List<CurrencyTypes>> {
                 throw new InvalidCurrencyException(ErrorMessages.INVALID_SAME_CURRENCY.getText());
             }
             if (currencyTypes.size() > 1 && !args.containsKey(CommandOptions.OUTPUT.getKey())) {
-                throw new InvalidCurrencyException(ErrorMessages.INVALID_OUTPUT.getText());
+                throw new InvalidCurrencyException(ErrorMessages.INVALID_NO_OUTPUT.getText());
             }
             return currencyTypes;
         }

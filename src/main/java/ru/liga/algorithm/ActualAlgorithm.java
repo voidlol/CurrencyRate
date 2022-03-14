@@ -1,6 +1,7 @@
 package ru.liga.algorithm;
 
 import ru.liga.currency.CurrencyRate;
+import ru.liga.input.Period;
 import ru.liga.type.CurrencyTypes;
 import ru.liga.type.ErrorMessages;
 import ru.liga.exception.InvalidRangeException;
@@ -18,9 +19,9 @@ public class ActualAlgorithm implements CurrencyForecaster {
     private static final int THREE_YEARS = 3;
 
     @Override
-    public List<CurrencyRate> getForecast(CurrencyRepository repository, CurrencyTypes type, LocalDate targetDate, boolean isRange) {
+    public List<CurrencyRate> getForecast(CurrencyRepository repository, CurrencyTypes type, Period period) {
         LocalDate lastDate = repository.getRates(type, 1).get(0).getDate();
-        if (targetDate.minusYears(TWO_YEARS).isAfter(lastDate)) {
+        if (period.getTargetDate().minusYears(TWO_YEARS).isAfter(lastDate)) {
             throw new InvalidRangeException(ErrorMessages.INVALID_DATE_IS_BEYOND.getText());
         }
         List<CurrencyRate> result = new ArrayList<>();
@@ -32,9 +33,9 @@ public class ActualAlgorithm implements CurrencyForecaster {
             CurrencyRate rateThreeYearsBefore = repository.getRateForDate(type, threeYearsBefore);
             result.add(new CurrencyRate(nextDay, type, rateTwoYearsBefore.getRate() + rateThreeYearsBefore.getRate()));
             nextDay = nextDay.plusDays(1);
-        } while (!nextDay.isAfter(targetDate));
+        } while (!nextDay.isAfter(period.getTargetDate()));
 
-        if (!isRange) {
+        if (!period.isRange()) {
             Collections.reverse(result);
             return result.stream()
                     .limit(1)

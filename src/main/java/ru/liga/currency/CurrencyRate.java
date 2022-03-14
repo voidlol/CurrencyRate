@@ -1,5 +1,6 @@
 package ru.liga.currency;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import ru.liga.type.CurrencyTypes;
 
@@ -7,9 +8,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.Locale;
-import java.util.Objects;
 
 @Getter
+@EqualsAndHashCode
 public class CurrencyRate {
 
     private final LocalDate date;
@@ -29,19 +30,6 @@ public class CurrencyRate {
      */
     private Double getRoundedRate() {
         return Math.round(rate * 100) / 100d;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CurrencyRate that = (CurrencyRate) o;
-        return Objects.equals(getDate(), that.getDate()) && getType() == that.getType() && Objects.equals(getRoundedRate(), that.getRoundedRate());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getDate(), getType(), getRate());
     }
 
     @Override

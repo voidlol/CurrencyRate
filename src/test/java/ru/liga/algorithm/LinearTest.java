@@ -11,6 +11,7 @@ import ru.liga.output.CommandResult;
 import ru.liga.repository.CurrencyRepository;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +34,7 @@ class LinearTest {
 
     @Test
     void whenInputUSDTomorrowThen1String() {
-        UserCommand userCommand = UserCommand.getBuilder("rate USD -date tomorrow -alg linear").build();
+        UserCommand userCommand = UserCommand.createFromString("rate USD -date tomorrow -alg linear");
         CommandExecutor executor = new ExecutorController(repository).getExecutor(userCommand);
         CommandResult result = executor.execute();
 
@@ -45,12 +46,14 @@ class LinearTest {
 
     @Test
     void whenInputUSDDateThen1String() {
-        UserCommand userCommand = UserCommand.getBuilder("rate USD -date 26.03.2022 -alg linear").build();
+        UserCommand userCommand = UserCommand.createFromString("rate USD -date 26.03.2022 -alg linear");
         CommandExecutor executor = new ExecutorController(repository).getExecutor(userCommand);
         CommandResult result = executor.execute();
 
         List<CurrencyRate> forecast = result.getListResult();
-        CurrencyRate expected = new CurrencyRate(LocalDate.of(2022, 3, 26), CurrencyTypes.USD, 47D);
+        LocalDate targetDate = LocalDate.of(2022, 3, 26);
+        long days = ChronoUnit.DAYS.between(LocalDate.now(), targetDate);
+        CurrencyRate expected = new CurrencyRate(targetDate, CurrencyTypes.USD, 30D + days);
         CurrencyRate actual = forecast.get(0);
         assertThat(expected).isEqualTo(actual);
     }

@@ -1,4 +1,4 @@
-package ru.liga.validator;
+package ru.liga.type;
 
 import lombok.Getter;
 

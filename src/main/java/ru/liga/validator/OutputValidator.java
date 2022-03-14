@@ -1,6 +1,7 @@
 package ru.liga.validator;
 
 import ru.liga.exception.InvalidOutputException;
+import ru.liga.type.CommandOptions;
 import ru.liga.type.ErrorMessages;
 
 import java.util.Map;

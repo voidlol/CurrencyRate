@@ -3,6 +3,7 @@ package ru.liga.validator;
 import ru.liga.algorithm.CurrencyForecaster;
 import ru.liga.exception.InvalidAlgorithmException;
 import ru.liga.type.AlgorithmTypes;
+import ru.liga.type.CommandOptions;
 import ru.liga.type.ErrorMessages;
 
 import java.util.Map;

@@ -20,11 +20,13 @@ public enum ErrorMessages {
     INVALID_DATE("Enter date in format DD.MM.YYYY or \"tomorrow\""),
     INVALID_PERIOD("Available period ranges: " + RangeTypes.getString()),
     INVALID_DATE_IS_BEYOND("Date is beyond!"),
+    INVALID_DATE_IN_PAST("Please, select future date."),
 
     INVALID_NO_ALG("Use -alg <algorithm name> to specify forecast algorithm"),
     INVALID_ALGORITHM("Available algorithms: " + AlgorithmTypes.getString()),
 
-    INVALID_OUTPUT("If you specify more than 1 currency than use \"-output graph\" argument"),
+    INVALID_NO_OUTPUT("If you specify more than 1 currency than use \"-output graph\" argument"),
+    INVALID_OUTPUT("Available output options: " + "graph"),
     INVALID_NO_PERIOD_WHEN_OUTPUT_GRAPH("Use -period instead of date when using -output graph.");
 
 
