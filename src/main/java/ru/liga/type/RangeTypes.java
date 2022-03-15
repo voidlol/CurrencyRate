@@ -26,16 +26,4 @@ public enum RangeTypes {
                 .map(c -> c.name().toLowerCase())
                 .collect(Collectors.joining(" | ", "<", ">"));
     }
-
-    public static RangeTypes findByName(String name) {
-        log.debug("Trying to find range with name {}", name);
-        for (RangeTypes rangeTypes : values()) {
-            if (rangeTypes.name().equalsIgnoreCase(name)) {
-                log.debug("Found range with name {}: {}", name, rangeTypes);
-                return rangeTypes;
-            }
-        }
-        log.debug("No such range with name {}", name);
-        return null;
-    }
 }

@@ -1,27 +1,33 @@
 package ru.liga.input;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
 import ru.liga.algorithm.CurrencyForecaster;
+import ru.liga.type.CommandType;
 import ru.liga.type.CurrencyTypes;
 import ru.liga.validator.*;
 
 import java.util.List;
 import java.util.Map;
 
-@Setter(AccessLevel.PRIVATE)
 @Getter
 public class UserCommand {
 
-    private Period period;
-    private CurrencyForecaster algorithm;
-    private List<CurrencyTypes> currencyTypes;
-    private boolean isGraph;
-    private String inputString;
+    private final String inputString;
+    private final CommandType commandType;
+    private final List<CurrencyTypes> currencyTypes;
+    private final Period period;
+    private final CurrencyForecaster algorithm;
+    private final boolean isGraph;
 
-    private UserCommand(String inputString) {
+    public UserCommand(String inputString, CommandType commandType,
+                       List<CurrencyTypes> currencyTypes, Period period,
+                       CurrencyForecaster algorithm, boolean isGraph) {
         this.inputString = inputString;
+        this.commandType = commandType;
+        this.currencyTypes = currencyTypes;
+        this.period = period;
+        this.algorithm = algorithm;
+        this.isGraph = isGraph;
     }
 
     /**
@@ -31,14 +37,13 @@ public class UserCommand {
      * @return UserCommand
      */
     public static UserCommand createFromString(String inputString) {
-        UserCommand userCommand = new UserCommand(inputString);
         Map<String, String> args = InputStringParser.parse(inputString);
-        CommandValidatorUtil validator = new CommandValidatorUtil(args);
-        validator.validateAndGetCommand();
-        userCommand.setPeriod(validator.validateAndGetDate());
-        userCommand.setAlgorithm(validator.validateAndGetAlgorithm());
-        userCommand.setCurrencyTypes(validator.validateAndGetCurrency());
-        userCommand.setGraph(validator.validateAndGetOutput());
-        return userCommand;
+        CommandValidatorService validator = new CommandValidatorService(args);
+        CommandType commandType = validator.validateAndGetCommandType();
+        List<CurrencyTypes> currencyTypes = validator.validateAndGetCurrency();
+        Period period = validator.validateAndGetPeriod();
+        CurrencyForecaster algorithm = validator.validateAndGetAlgorithm();
+        Boolean isGraph = validator.validateAndGetOutput();
+        return new UserCommand(inputString, commandType, currencyTypes, period, algorithm, isGraph);
     }
 }

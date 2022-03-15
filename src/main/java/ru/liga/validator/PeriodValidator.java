@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
 
-public class DateValidator implements Validator<Period> {
+public class PeriodValidator implements Validator<Period> {
 
     private static final String DATE_FORMAT_PATTER = "dd.MM.yyyy";
 
@@ -50,10 +50,10 @@ public class DateValidator implements Validator<Period> {
     }
 
     private LocalDate getDateForPeriod(String periodValue) {
-        RangeTypes rangeType = RangeTypes.findByName(periodValue);
-        if (rangeType != null) {
+        try {
+            RangeTypes rangeType = RangeTypes.valueOf(periodValue.toUpperCase());
             return LocalDate.now().plusDays(rangeType.getDays());
-        } else {
+        } catch (IllegalArgumentException e) {
             throw new InvalidRangeException(ErrorMessages.INVALID_PERIOD.getText());
         }
     }

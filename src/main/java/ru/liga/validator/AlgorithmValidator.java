@@ -15,10 +15,9 @@ public class AlgorithmValidator implements Validator<CurrencyForecaster> {
         if (!args.containsKey(CommandOptions.ALGORITHM.getKey())) {
             throw new InvalidAlgorithmException(ErrorMessages.INVALID_NO_ALG.getText());
         } else {
-            AlgorithmTypes algorithmType = AlgorithmTypes.findByName(args.get(CommandOptions.ALGORITHM.getKey()));
-            if (algorithmType != null) {
-                return algorithmType.getAlgorithm();
-            } else {
+            try {
+                return AlgorithmTypes.valueOf(args.get(CommandOptions.ALGORITHM.getKey()).toUpperCase()).getAlgorithm();
+            } catch (IllegalArgumentException e) {
                 throw new InvalidAlgorithmException(ErrorMessages.INVALID_ALGORITHM.getText());
             }
         }

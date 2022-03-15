@@ -1,7 +1,6 @@
 package ru.liga.input;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.cglib.core.Local;
 import ru.liga.exception.*;
 import ru.liga.type.AlgorithmTypes;
 import ru.liga.type.CurrencyTypes;

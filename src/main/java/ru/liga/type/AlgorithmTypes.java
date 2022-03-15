@@ -29,15 +29,4 @@ public enum AlgorithmTypes {
         return algorithm;
     }
 
-    public static AlgorithmTypes findByName(String name) {
-        log.debug("Trying to find algorithm with name {}", name);
-        for (AlgorithmTypes algorithmTypes : values()) {
-            if (algorithmTypes.name().equalsIgnoreCase(name)) {
-                log.debug("Found algorithm with name {}: {}", name, algorithmTypes);
-                return algorithmTypes;
-            }
-        }
-        log.debug("No such algorithm with name {}", name);
-        return null;
-    }
 }
