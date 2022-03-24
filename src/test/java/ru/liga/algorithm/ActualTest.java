@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.liga.currency.CurrencyRate;
 import ru.liga.type.CurrencyTypes;
 import ru.liga.executor.CommandExecutor;
-import ru.liga.executor.ExecutorController;
+import ru.liga.executor.ExecutorFactory;
 import ru.liga.input.UserCommand;
 import ru.liga.output.CommandResult;
 import ru.liga.repository.CurrencyRepository;
@@ -28,7 +28,9 @@ class ActualTest {
     static void setMockito() {
         List<CurrencyRate> USD = new ArrayList<>();
         for (int i = 0; i < 1100; i++) {
-            USD.add(new CurrencyRate(LocalDate.now().minusDays(i), CurrencyTypes.USD, 10D));
+            CurrencyRate currencyRate = new CurrencyRate(LocalDate.now().minusDays(i), CurrencyTypes.USD, 10D);
+            currencyRate.setNominal(1);
+            USD.add(currencyRate);
         }
         when(repository.getRates(CurrencyTypes.USD, 1)).thenReturn(USD);
         when(repository.getRateForDate(eq(CurrencyTypes.USD), any(LocalDate.class))).thenAnswer(
@@ -40,13 +42,14 @@ class ActualTest {
 
     @Test
     void whenUSDThenOneResult() {
-        UserCommand userCommand = UserCommand.createFromString("rate USD -date 20.03.2022 -alg actual");
-        CommandExecutor executor = new ExecutorController(repository).getExecutor(userCommand);
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        UserCommand userCommand = UserCommand.createFromString("rate USD -date tomorrow -alg actual");
+        CommandExecutor executor = new ExecutorFactory(repository).getExecutor(userCommand);
         CommandResult result = executor.execute();
 
         List<CurrencyRate> forecast = result.getListResult();
         CurrencyRate actual = forecast.get(0);
-        CurrencyRate expected = new CurrencyRate(LocalDate.of(2022, 3, 20), CurrencyTypes.USD, 20D);
+        CurrencyRate expected = new CurrencyRate(tomorrow, CurrencyTypes.USD, 20D);
         assertThat(expected).isEqualTo(actual);
     }
 }

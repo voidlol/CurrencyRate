@@ -1,20 +1,19 @@
 package ru.liga.validator;
 
+import lombok.RequiredArgsConstructor;
 import ru.liga.algorithm.CurrencyForecaster;
 import ru.liga.input.Period;
 import ru.liga.type.CommandType;
 import ru.liga.type.CurrencyTypes;
+import ru.liga.type.OutputType;
 
 import java.util.List;
 import java.util.Map;
 
+@RequiredArgsConstructor
 public class CommandValidatorService {
 
     private final Map<String, String> args;
-
-    public CommandValidatorService(Map<String, String> args) {
-        this.args = args;
-    }
 
     public Period validateAndGetPeriod() {
         return new PeriodValidator().validateAndGet(args);
@@ -32,7 +31,7 @@ public class CommandValidatorService {
         return new AlgorithmValidator().validateAndGet(args);
     }
 
-    public Boolean validateAndGetOutput() {
+    public OutputType validateAndGetOutput() {
         return new OutputValidator().validateAndGet(args);
     }
 }

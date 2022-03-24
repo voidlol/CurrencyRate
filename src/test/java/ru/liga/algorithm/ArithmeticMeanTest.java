@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.liga.currency.CurrencyRate;
 import ru.liga.type.CurrencyTypes;
 import ru.liga.executor.CommandExecutor;
-import ru.liga.executor.ExecutorController;
+import ru.liga.executor.ExecutorFactory;
 import ru.liga.input.UserCommand;
 import ru.liga.output.CommandResult;
 import ru.liga.repository.CurrencyRepository;
@@ -73,7 +73,7 @@ class ArithmeticMeanTest {
     @Test
     void whenInputIsTomorrowUSDThenResultHas1String() {
         UserCommand userCommand = UserCommand.createFromString( "rate USD -date tomorrow -alg mean");
-        CommandExecutor executor = new ExecutorController(currencyRepository).getExecutor(userCommand);
+        CommandExecutor executor = new ExecutorFactory(currencyRepository).getExecutor(userCommand);
         CommandResult result = executor.execute();
 
         List<CurrencyRate> rate_usd_tomorrow = result.getListResult();
@@ -86,7 +86,7 @@ class ArithmeticMeanTest {
     @Test
     void whenInputIsTomorrowEURThenResultHas1String() {
         UserCommand userCommand = UserCommand.createFromString("rate EUR -date tomorrow -alg mean");
-        CommandExecutor executor = new ExecutorController(currencyRepository).getExecutor(userCommand);
+        CommandExecutor executor = new ExecutorFactory(currencyRepository).getExecutor(userCommand);
         CommandResult result = executor.execute();
 
         List<CurrencyRate> rate_eur_tomorrow = result.getListResult();
@@ -99,7 +99,7 @@ class ArithmeticMeanTest {
     @Test
     void whenInputIsTomorrowTRYThenResultHas1String() {
         UserCommand userCommand = UserCommand.createFromString("rate TRY -date tomorrow -alg mean");
-        CommandExecutor executor = new ExecutorController(currencyRepository).getExecutor(userCommand);
+        CommandExecutor executor = new ExecutorFactory(currencyRepository).getExecutor(userCommand);
         CommandResult result = executor.execute();
 
         List<CurrencyRate> rate_try_tomorrow = result.getListResult();
@@ -112,7 +112,7 @@ class ArithmeticMeanTest {
     @Test
     void whenInputIsWeekUSDThenResultHas7String() {
         UserCommand userCommand = UserCommand.createFromString("rate USD -period week -alg mean");
-        CommandExecutor executor = new ExecutorController(currencyRepository).getExecutor(userCommand);
+        CommandExecutor executor = new ExecutorFactory(currencyRepository).getExecutor(userCommand);
         CommandResult result = executor.execute();
         List<CurrencyRate> rate_usd_week = result.getListResult();
         CurrencyRate tomorrowRate = new CurrencyRate(TOMORROW, CurrencyTypes.USD, 8d);
@@ -136,7 +136,7 @@ class ArithmeticMeanTest {
     @Test
     void whenInputIsWeekEURThenResultHas7String() {
         UserCommand userCommand = UserCommand.createFromString("rate EUR -period week -alg mean");
-        CommandExecutor executor = new ExecutorController(currencyRepository).getExecutor(userCommand);
+        CommandExecutor executor = new ExecutorFactory(currencyRepository).getExecutor(userCommand);
         CommandResult result = executor.execute();
         List<CurrencyRate> rate_eur_week = result.getListResult();
         CurrencyRate tomorrowRate = new CurrencyRate(TOMORROW, CurrencyTypes.EUR, 4d);
@@ -160,7 +160,7 @@ class ArithmeticMeanTest {
     @Test
     void whenInputIsWeekTRYThenResultHas7String() {
         UserCommand userCommand = UserCommand.createFromString("rate TRY -period week -alg mean");
-        CommandExecutor executor = new ExecutorController(currencyRepository).getExecutor(userCommand);
+        CommandExecutor executor = new ExecutorFactory(currencyRepository).getExecutor(userCommand);
         CommandResult result = executor.execute();
         List<CurrencyRate> rate_try_week = result.getListResult();
         CurrencyRate tomorrowRate = new CurrencyRate(TOMORROW, CurrencyTypes.TRY, 16.6d);

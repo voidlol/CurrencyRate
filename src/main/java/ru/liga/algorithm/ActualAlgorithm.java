@@ -31,7 +31,8 @@ public class ActualAlgorithm implements CurrencyForecaster {
             LocalDate threeYearsBefore = nextDay.minusYears(THREE_YEARS);
             CurrencyRate rateTwoYearsBefore = repository.getRateForDate(type, twoYearsBefore);
             CurrencyRate rateThreeYearsBefore = repository.getRateForDate(type, threeYearsBefore);
-            result.add(new CurrencyRate(nextDay, type, rateTwoYearsBefore.getRate() + rateThreeYearsBefore.getRate()));
+            int meanNominal = (rateTwoYearsBefore.getNominal() + rateThreeYearsBefore.getNominal()) / 2;
+            result.add(new CurrencyRate(nextDay, type, (rateTwoYearsBefore.getRate() + rateThreeYearsBefore.getRate()) * meanNominal));
             nextDay = nextDay.plusDays(1);
         } while (!nextDay.isAfter(period.getTargetDate()));
 

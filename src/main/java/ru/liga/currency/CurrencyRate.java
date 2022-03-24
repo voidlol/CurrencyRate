@@ -1,7 +1,6 @@
 package ru.liga.currency;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.*;
 import ru.liga.type.CurrencyTypes;
 
 import java.time.LocalDate;
@@ -11,16 +10,22 @@ import java.util.Locale;
 
 @Getter
 @EqualsAndHashCode
+@Setter
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class CurrencyRate {
 
-    private final LocalDate date;
-    private final CurrencyTypes type;
-    private final Double rate;
+    @NonNull
+    private LocalDate date;
+    @NonNull
+    private CurrencyTypes type;
+    @NonNull
+    private Double rate;
 
-    public CurrencyRate(LocalDate date, CurrencyTypes type, Double rate) {
-        this.date = date;
-        this.type = type;
-        this.rate = rate;
+    private Integer nominal;
+
+    public void normalize() {
+        this.rate /= this.nominal;
     }
 
     /**

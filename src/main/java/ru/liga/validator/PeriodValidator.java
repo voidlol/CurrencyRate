@@ -24,15 +24,19 @@ public class PeriodValidator implements Validator<Period> {
         } else if (args.containsKey(CommandOptions.DATE.getKey())) {
             String dateValue = args.get(CommandOptions.DATE.getKey());
             if (args.containsKey(CommandOptions.OUTPUT.getKey())) {
-                throw new InvalidRangeException(ErrorMessages.INVALID_NO_PERIOD_WHEN_OUTPUT_GRAPH.getText());
+                throw new InvalidRangeException(ErrorMessages.INVALID_NO_PERIOD_WHEN_OUTPUT.getText());
             }
             return new Period(getDateForDate(dateValue), false);
         } else {
+            if (!args.containsKey(CommandOptions.OUTPUT.getKey())) {
+                throw new InvalidRangeException(ErrorMessages.INVALID_NO_OUTPUT.getText());
+            }
             String periodValue = args.get(CommandOptions.PERIOD.getKey());
             return new Period(getDateForPeriod(periodValue), true);
         }
     }
 
+    //-date tomorrow LocalDate
     private LocalDate getDateForDate(String dateValue) {
         try {
             LocalDate targetDate = LocalDate.parse(dateValue, DateTimeFormatter.ofPattern(DATE_FORMAT_PATTER));
@@ -49,6 +53,7 @@ public class PeriodValidator implements Validator<Period> {
         }
     }
 
+    //-period month
     private LocalDate getDateForPeriod(String periodValue) {
         try {
             RangeTypes rangeType = RangeTypes.valueOf(periodValue.toUpperCase());

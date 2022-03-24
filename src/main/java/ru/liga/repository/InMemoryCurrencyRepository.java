@@ -1,5 +1,6 @@
 package ru.liga.repository;
 
+import lombok.RequiredArgsConstructor;
 import ru.liga.currency.CurrencyRate;
 import ru.liga.type.CurrencyTypes;
 import ru.liga.data.CurrencyParser;
@@ -10,14 +11,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 public class InMemoryCurrencyRepository implements CurrencyRepository {
 
     private final Map<CurrencyTypes, List<CurrencyRate>> data = new EnumMap<>(CurrencyTypes.class);
     private final CurrencyParser parser;
-
-    public InMemoryCurrencyRepository(CurrencyParser parser) {
-        this.parser = parser;
-    }
 
     @Override
     public void addAll(CurrencyTypes type) {

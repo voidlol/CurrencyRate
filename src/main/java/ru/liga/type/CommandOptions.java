@@ -1,8 +1,10 @@
 package ru.liga.type;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor
 public enum CommandOptions {
     COMMAND("command"),
     CURRENCY("currency"),
@@ -11,10 +13,6 @@ public enum CommandOptions {
     ALGORITHM("-alg"),
     OUTPUT("-output");
 
-    private String key;
-
-    CommandOptions(String key) {
-        this.key = key;
-    }
+    private final String key;
 
 }

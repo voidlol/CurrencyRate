@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.liga.currency.CurrencyRate;
 import ru.liga.type.CurrencyTypes;
 import ru.liga.executor.CommandExecutor;
-import ru.liga.executor.ExecutorController;
+import ru.liga.executor.ExecutorFactory;
 import ru.liga.input.UserCommand;
 import ru.liga.output.CommandResult;
 import ru.liga.repository.CurrencyRepository;
@@ -24,7 +24,7 @@ class LinearTest {
     private static final CurrencyRepository repository = mock(CurrencyRepository.class);
 
     @BeforeEach
-     void setMockito() {
+    void setMockito() {
         List<CurrencyRate> USD = new ArrayList<>();
         for (int i = 0; i < 30; i++) {
             USD.add(new CurrencyRate(LocalDate.now().minusDays(i), CurrencyTypes.USD, 30D - i));
@@ -35,7 +35,7 @@ class LinearTest {
     @Test
     void whenInputUSDTomorrowThen1String() {
         UserCommand userCommand = UserCommand.createFromString("rate USD -date tomorrow -alg linear");
-        CommandExecutor executor = new ExecutorController(repository).getExecutor(userCommand);
+        CommandExecutor executor = new ExecutorFactory(repository).getExecutor(userCommand);
         CommandResult result = executor.execute();
 
         List<CurrencyRate> forecast = result.getListResult();
@@ -47,7 +47,7 @@ class LinearTest {
     @Test
     void whenInputUSDDateThen1String() {
         UserCommand userCommand = UserCommand.createFromString("rate USD -date 26.03.2022 -alg linear");
-        CommandExecutor executor = new ExecutorController(repository).getExecutor(userCommand);
+        CommandExecutor executor = new ExecutorFactory(repository).getExecutor(userCommand);
         CommandResult result = executor.execute();
 
         List<CurrencyRate> forecast = result.getListResult();

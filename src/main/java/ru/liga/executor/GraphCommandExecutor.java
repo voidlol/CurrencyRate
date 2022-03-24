@@ -36,7 +36,7 @@ public class GraphCommandExecutor implements CommandExecutor {
     @Override
     public CommandResult execute() {
         Map<CurrencyTypes, List<CurrencyRate>> data = new EnumMap<>(CurrencyTypes.class);
-        for (CurrencyTypes type: command.getCurrencyTypes()) {
+        for (CurrencyTypes type : command.getCurrencyTypes()) {
             data.put(type, getForecast(type));
         }
         try {

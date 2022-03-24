@@ -28,10 +28,13 @@ public class MysticAlgorithm implements CurrencyForecaster {
         Double averageRate = fullMoonRates.stream()
                 .mapToDouble(CurrencyRate::getRate)
                 .average().orElse(0D);
+        Integer averageNominal = (int) fullMoonRates.stream()
+                .mapToInt(CurrencyRate::getNominal)
+                .average().orElse(1);
 
         List<CurrencyRate> result = new ArrayList<>();
         if (period.isRange()) {
-            CurrencyRate lastRate = new CurrencyRate(LocalDate.now().plusDays(1), type, averageRate);
+            CurrencyRate lastRate = new CurrencyRate(LocalDate.now().plusDays(1), type, averageRate * averageNominal);
             result.add(lastRate);
             while (!lastRate.getDate().isEqual(period.getTargetDate())) {
                 Double newRate = getNewRate(lastRate.getRate());

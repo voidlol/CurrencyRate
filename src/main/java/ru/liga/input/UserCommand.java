@@ -4,7 +4,8 @@ import lombok.Getter;
 import ru.liga.algorithm.CurrencyForecaster;
 import ru.liga.type.CommandType;
 import ru.liga.type.CurrencyTypes;
-import ru.liga.validator.*;
+import ru.liga.type.OutputType;
+import ru.liga.validator.CommandValidatorService;
 
 import java.util.List;
 import java.util.Map;
@@ -17,24 +18,25 @@ public class UserCommand {
     private final List<CurrencyTypes> currencyTypes;
     private final Period period;
     private final CurrencyForecaster algorithm;
-    private final boolean isGraph;
+    private final OutputType outputType;
 
-    public UserCommand(String inputString, CommandType commandType,
+    private UserCommand(String inputString, CommandType commandType,
                        List<CurrencyTypes> currencyTypes, Period period,
-                       CurrencyForecaster algorithm, boolean isGraph) {
+                       CurrencyForecaster algorithm, OutputType outputType) {
         this.inputString = inputString;
         this.commandType = commandType;
         this.currencyTypes = currencyTypes;
         this.period = period;
         this.algorithm = algorithm;
-        this.isGraph = isGraph;
+        this.outputType = outputType;
     }
 
     /**
      * Builds valid UserCommand object
      * If fails during validation:
-     * @throws ru.liga.exception.BaseException - with error message
+     *
      * @return UserCommand
+     * @throws ru.liga.exception.BaseException - with error message
      */
     public static UserCommand createFromString(String inputString) {
         Map<String, String> args = InputStringParser.parse(inputString);
@@ -43,7 +45,7 @@ public class UserCommand {
         List<CurrencyTypes> currencyTypes = validator.validateAndGetCurrency();
         Period period = validator.validateAndGetPeriod();
         CurrencyForecaster algorithm = validator.validateAndGetAlgorithm();
-        Boolean isGraph = validator.validateAndGetOutput();
-        return new UserCommand(inputString, commandType, currencyTypes, period, algorithm, isGraph);
+        OutputType outputType = validator.validateAndGetOutput();
+        return new UserCommand(inputString, commandType, currencyTypes, period, algorithm, outputType);
     }
 }

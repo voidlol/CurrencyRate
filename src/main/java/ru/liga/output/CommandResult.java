@@ -1,6 +1,7 @@
 package ru.liga.output;
 
 import lombok.Getter;
+import lombok.ToString;
 import ru.liga.currency.CurrencyRate;
 
 import java.io.File;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
+@ToString
 public class CommandResult {
 
     private String textResult;
@@ -29,13 +31,9 @@ public class CommandResult {
         isFile = true;
     }
 
-    @Override
-    public String toString() {
-        return "CommandResult{" +
-                "textResult='" + textResult + '\'' +
-                ", graphResult=" + graphResult +
-                ", isText=" + isText +
-                ", isFile=" + isFile +
-                '}';
+    public CommandResult(String text) {
+        textResult = text;
+        isText = true;
     }
+
 }

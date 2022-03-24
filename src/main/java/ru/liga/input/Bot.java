@@ -10,27 +10,27 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.liga.exception.BaseException;
 import ru.liga.executor.CommandExecutor;
-import ru.liga.executor.ExecutorController;
+import ru.liga.executor.ExecutorFactory;
 import ru.liga.output.CommandResult;
 import ru.liga.repository.CurrencyRepository;
 
 @Slf4j
 public class Bot extends TelegramLongPollingCommandBot {
 
-    private final String BOT_NAME;
-    private final String BOT_TOKEN;
+    private final String botName;
+    private final String botToken;
     private final CurrencyRepository repository;
 
     public Bot(String botName, String botToken, CurrencyRepository repository) {
         super();
         this.repository = repository;
-        this.BOT_NAME = botName;
-        this.BOT_TOKEN = botToken;
+        this.botName = botName;
+        this.botToken = botToken;
     }
 
     @Override
     public String getBotUsername() {
-        return BOT_NAME;
+        return botName;
     }
 
     @Override
@@ -39,21 +39,21 @@ public class Bot extends TelegramLongPollingCommandBot {
         log.info("Input: {}; from user: {}", userInput.getText(), userInput.getFrom().getUserName());
         try {
             UserCommand userCommand = UserCommand.createFromString(userInput.getText());
-            CommandExecutor executor = new ExecutorController(repository).getExecutor(userCommand);
+            CommandExecutor executor = new ExecutorFactory(repository).getExecutor(userCommand);
             CommandResult result = executor.execute();
-            setAnswer(userInput.getChatId(), userInput.getFrom().getUserName(), result);
+            sendMessageToChat(userInput.getChatId(), userInput.getFrom().getUserName(), result);
         } catch (BaseException e) {
             log.error(e.getMessage());
-            setAnswer(userInput.getChatId(), userInput.getFrom().getUserName(), e.getMessage());
+            sendMessageToChat(userInput.getChatId(), userInput.getFrom().getUserName(), e.getMessage());
         }
     }
 
     @Override
     public String getBotToken() {
-        return BOT_TOKEN;
+        return botToken;
     }
 
-    private void setAnswer(Long chatId, String userName, String error) {
+    private void sendMessageToChat(Long chatId, String userName, String error) {
         SendMessage answer = new SendMessage();
         answer.setChatId(chatId.toString());
         answer.setText(error);
@@ -64,7 +64,7 @@ public class Bot extends TelegramLongPollingCommandBot {
         }
     }
 
-    private void setAnswer(Long chatId, String userName, CommandResult result) {
+    private void sendMessageToChat(Long chatId, String userName, CommandResult result) {
         try {
             if (result.isText()) {
                 SendMessage answer = new SendMessage();

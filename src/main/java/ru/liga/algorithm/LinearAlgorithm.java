@@ -6,19 +6,24 @@ import ru.liga.type.CurrencyTypes;
 import ru.liga.repository.CurrencyRepository;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class LinearAlgorithm implements CurrencyForecaster {
 
     private static final int DAYS_AMOUNT_TO_INTERPOLATE = 30;
+    private int meanNominal;
 
     @Override
     public List<CurrencyRate> getForecast(CurrencyRepository repository, CurrencyTypes type, Period period) {
         List<CurrencyRate> data = repository.getRates(type, DAYS_AMOUNT_TO_INTERPOLATE);
+        meanNominal = (int) data.stream()
+                .mapToInt(CurrencyRate::getNominal)
+                .average()
+                .orElse(1);
         LocalDate nextDay = data.get(0).getDate().plusDays(1);
         data.sort(Comparator.comparing(CurrencyRate::getDate));
         double[] dates = new double[data.size()];
@@ -28,6 +33,10 @@ public class LinearAlgorithm implements CurrencyForecaster {
             rates[i] = data.get(i).getRate();
         }
         LinearRegression linearRegression = new LinearRegression(dates, rates);
+        if (!period.isRange()) {
+            return Collections.singletonList(
+                    getRateForDate(period.getTargetDate(), data.get(DAYS_AMOUNT_TO_INTERPOLATE - 1).getDate(), type, linearRegression));
+        }
         List<CurrencyRate> result = new ArrayList<>();
         int i = 1;
         do {
@@ -38,11 +47,12 @@ public class LinearAlgorithm implements CurrencyForecaster {
             i++;
         } while (!nextDay.isAfter(period.getTargetDate()));
 
-        if (period.isRange()) {
-            return result;
-        } else {
-            Collections.reverse(result);
-            return result.stream().limit(1).collect(Collectors.toList());
-        }
+        return result;
+    }
+
+
+    private CurrencyRate getRateForDate(LocalDate targetDate, LocalDate lastDateInSource, CurrencyTypes type, LinearRegression regression) {
+        long daysBetween = ChronoUnit.DAYS.between(lastDateInSource, targetDate);
+        return new CurrencyRate(targetDate, type, regression.predict(DAYS_AMOUNT_TO_INTERPOLATE + daysBetween) * meanNominal);
     }
 }

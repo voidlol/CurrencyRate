@@ -11,8 +11,8 @@ import ru.liga.repository.InMemoryCurrencyRepository;
 @Slf4j
 public class App {
 
-    private static final String BOT_NAME = "currencyrate_bot";
-    private static final String BOT_TOKEN = "5156488335:AAEEaAVzyyR4HXOEYsjjPHvlNtY6Qv4te9I";
+    private static final String BOT_NAME = System.getenv("NAME");
+    private static final String BOT_TOKEN = System.getenv("TOKEN");
 
     public static void main(String[] args) {
         try {
@@ -20,7 +20,7 @@ public class App {
             Bot bot = new Bot(BOT_NAME, BOT_TOKEN, new InMemoryCurrencyRepository(new CSVParser()));
             botsApi.registerBot(bot);
         } catch (TelegramApiException e) {
-            log.error("Error in psvm: ", e);
+            log.error("Error in bot registering. Token {}, Name {}", BOT_TOKEN, BOT_TOKEN, e);
         }
     }
 }
